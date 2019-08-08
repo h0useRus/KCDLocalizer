@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -12,6 +13,7 @@ namespace NSW.KCDLocalizer.Forms
         public MainForm()
         {
             InitializeComponent();
+            gvMain.AutoGenerateColumns = false;
             UpdateControls();
         }
 
@@ -24,7 +26,7 @@ namespace NSW.KCDLocalizer.Forms
 
         private void ResizeGridColumns()
         {
-            colEnglishSrc.Width = colTransaltionDes.Width = (gvMain.Size.Width - colKey.Width - gvMain.RowHeadersWidth - 20)/2;
+            colEnglishSrc.Width = colTransaltionDes.Width = (gvMain.Size.Width - colKey.Width - 20)/2;
         }
 
         private async void BtnOpenSourceFile_Click(object sender, System.EventArgs e)
@@ -42,7 +44,6 @@ namespace NSW.KCDLocalizer.Forms
 
         private void BindTable()
         {
-            gvMain.AutoGenerateColumns = false;
             gvMain.DataSource = null;
             gvMain.DataSource = LocalizationFactory.Localizations.Values.ToList();
             ResizeGridColumns();
@@ -66,31 +67,44 @@ namespace NSW.KCDLocalizer.Forms
             ResizeGridColumns();
         }
 
-        private void GvMain_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void GvMain_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var row = gvMain.Rows[e.RowIndex];
-            if (row.DataBoundItem is Localization localization)
+            if (e.RowIndex>= 0 && gvMain.Rows[e.RowIndex].DataBoundItem is Localization localization)
             {
-                if(localization.DestinationTranslation == null)
-                    row.Cells[2].Style.BackColor = Color.DarkSalmon;
-
-                if (string.IsNullOrWhiteSpace(localization.OriginalEnglish) || string.IsNullOrWhiteSpace(localization.DestinationEnglish))
+                using (var form = new EditForm(localization))
                 {
-                    row.Cells[0].Style.BackColor = Color.DarkSalmon;
-                    row.Cells[1].Style.BackColor = Color.DarkSalmon;
-                    row.Cells[2].Style.BackColor = Color.DarkSalmon;
+                    form.ShowDialog();
                 }
             }
         }
 
-        private void GvMain_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void GvMain_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            var key = gvMain.Rows[e.RowIndex].Cells[0].Value.ToString();
-            var value = LocalizationFactory.Localizations[key];
-            using (var form = new EditForm(value))
+            if(string.IsNullOrEmpty(tbDestinationFile.Text))
+                return;
+
+            var row = gvMain.Rows[e.RowIndex];
+            if (row.DataBoundItem is Localization localization)
             {
-                form.ShowDialog();
+                var color = Color.White;
+                if (!string.Equals(localization.OriginalEnglish, localization.DestinationEnglish, StringComparison.Ordinal))
+                {
+                    color = Color.LightYellow;
+                }
+
+                if (string.IsNullOrWhiteSpace(localization.DestinationEnglish) || string.IsNullOrWhiteSpace(localization.DestinationTranslation))
+                {
+                    color = Color.LightSalmon;
+                }
+
+                row.DefaultCellStyle.BackColor = color;
             }
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            var backupName = $"{Path.GetDirectoryName(tbDestinationFile.Text)}\\{Path.GetFileNameWithoutExtension(tbDestinationFile.Text)}_{DateTime.UtcNow.Ticks}{Path.GetExtension(tbDestinationFile.Text)}";
+            //File.Move(tbDestinationFile.Text);
         }
     }
 }

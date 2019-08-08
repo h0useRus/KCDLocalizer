@@ -34,7 +34,6 @@
             this.tbSourceFile = new System.Windows.Forms.TextBox();
             this.tbDestinationFile = new System.Windows.Forms.TextBox();
             this.statusBar = new System.Windows.Forms.StatusStrip();
-            this.loadProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.lblSorceRows = new System.Windows.Forms.ToolStripStatusLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,6 +41,8 @@
             this.colKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEnglishSrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTransaltionDes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnValidate = new System.Windows.Forms.Button();
             this.statusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvMain)).BeginInit();
             this.SuspendLayout();
@@ -95,18 +96,12 @@
             // statusBar
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadProgressBar,
             this.lblSorceRows});
             this.statusBar.Location = new System.Drawing.Point(0, 426);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(800, 24);
             this.statusBar.TabIndex = 4;
             this.statusBar.Text = "statusStrip1";
-            // 
-            // loadProgressBar
-            // 
-            this.loadProgressBar.Name = "loadProgressBar";
-            this.loadProgressBar.Size = new System.Drawing.Size(100, 18);
             // 
             // lblSorceRows
             // 
@@ -119,21 +114,21 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.Size = new System.Drawing.Size(62, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Source:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Translation:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // gvMain
             // 
@@ -149,12 +144,15 @@
             this.colEnglishSrc,
             this.colTransaltionDes});
             this.gvMain.Location = new System.Drawing.Point(15, 70);
+            this.gvMain.MultiSelect = false;
             this.gvMain.Name = "gvMain";
             this.gvMain.ReadOnly = true;
-            this.gvMain.Size = new System.Drawing.Size(773, 353);
+            this.gvMain.RowHeadersVisible = false;
+            this.gvMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gvMain.Size = new System.Drawing.Size(773, 324);
             this.gvMain.TabIndex = 7;
             this.gvMain.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GvMain_CellDoubleClick);
-            this.gvMain.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.GvMain_RowsAdded);
+            this.gvMain.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GvMain_RowPrePaint);
             // 
             // colKey
             // 
@@ -179,11 +177,34 @@
             this.colTransaltionDes.Name = "colTransaltionDes";
             this.colTransaltionDes.ReadOnly = true;
             // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(713, 400);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 8;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            // 
+            // btnValidate
+            // 
+            this.btnValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnValidate.Location = new System.Drawing.Point(632, 400);
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.Size = new System.Drawing.Size(75, 23);
+            this.btnValidate.TabIndex = 9;
+            this.btnValidate.Text = "Validate";
+            this.btnValidate.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnValidate);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.gvMain);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -211,7 +232,6 @@
         private System.Windows.Forms.TextBox tbSourceFile;
         private System.Windows.Forms.TextBox tbDestinationFile;
         private System.Windows.Forms.StatusStrip statusBar;
-        private System.Windows.Forms.ToolStripProgressBar loadProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel lblSorceRows;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -219,5 +239,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colKey;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEnglishSrc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltionDes;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnValidate;
     }
 }

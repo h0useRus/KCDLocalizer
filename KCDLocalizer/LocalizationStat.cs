@@ -10,7 +10,7 @@
 
         public override string ToString()
         {
-            return $"Src: {SourceRows} | Des: {DestinationRows} | Missed: {MissedKeys} | New: {NewKeys} | Not matched: {NotMatchedEnglish}";
+            return $"Src: {SourceRows} | Des: {DestinationRows} | New: {NewKeys} | Warnings: {NotMatchedEnglish} | Errors: {MissedKeys}";
         }
     }
 }

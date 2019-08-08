@@ -1,36 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NSW.KCDLocalizer.Forms
 {
     public partial class EditForm : Form
     {
+        public Localization Localization { get; }
+
         public EditForm(Localization localization)
         {
             InitializeComponent();
-            UpdateControls(localization);
+            Localization = localization;
+            UpdateControls();
         }
 
-        private void UpdateControls(Localization localization)
+        private void UpdateControls()
         {
-            Text = $"Edit {localization.Key}";
-            tbKey.Text = localization.Key;
-            tbOriginalEnglish.Text = localization.OriginalEnglish;
-            tbOriginalTranslation.Text = localization.OriginalTranslation;
-            tbDestinationEnglish.Text = localization.DestinationEnglish;
-            tbDestinationTranslation.Text = localization.DestinationTranslation;
+            Text = $"Edit {Localization.Key}";
+            tbKey.Text = Localization.Key;
+            tbOriginalEnglish.Text = Localization.OriginalEnglish;
+            tbOriginalTranslation.Text = Localization.OriginalTranslation;
+            tbDestinationEnglish.Text = Localization.DestinationEnglish;
+            tbDestinationTranslation.Text = Localization.DestinationTranslation;
+
+            tbOriginalEnglish.TextChanged += OnTextBoxTextChanged;
+            tbOriginalTranslation.TextChanged += OnTextBoxTextChanged;
+            tbDestinationEnglish.TextChanged += OnTextBoxTextChanged;
+            tbDestinationTranslation.TextChanged += OnTextBoxTextChanged;
+
+            OnTextBoxTextChanged(this, EventArgs.Empty);
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void OnTextBoxTextChanged(object sender, EventArgs e)
+        {
+            if (string.Equals(tbOriginalEnglish.Text, tbDestinationEnglish.Text))
+            {
+                tbOriginalEnglish.BackColor = tbDestinationEnglish.BackColor = Color.LightGreen;
+            }
+            else
+            {
+                tbDestinationEnglish.BackColor = Color.LightYellow;
+
+                tbOriginalEnglish.BackColor = string.IsNullOrWhiteSpace(tbOriginalEnglish.Text) ? Color.LightSalmon : tbOriginalEnglish.BackColor;
+                tbDestinationEnglish.BackColor = string.IsNullOrWhiteSpace(tbDestinationEnglish.Text) ? Color.LightSalmon : tbDestinationEnglish.BackColor;
+            }
+
+            tbOriginalTranslation.BackColor = string.IsNullOrWhiteSpace(tbOriginalTranslation.Text) ? Color.LightSalmon : Color.White;
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            Localization.OriginalEnglish = tbOriginalEnglish.Text;
+            Localization.OriginalTranslation = tbOriginalTranslation.Text;
+            Localization.DestinationEnglish = tbDestinationEnglish.Text;
+            Localization.DestinationTranslation = tbDestinationTranslation.Text;
+            BtnClose_Click(sender, e);
         }
     }
 }
