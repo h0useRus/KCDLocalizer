@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Windows.Forms;
 
 namespace NSW.KCDLocalizer.Forms
@@ -21,7 +22,7 @@ namespace NSW.KCDLocalizer.Forms
         {
             Text = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             lblSorceRows.Text = LocalizationFactory.Statistics.ToString();
-            tbDestinationFile.Enabled = btnOpenDestinationFile.Enabled = LocalizationFactory.Statistics.SourceRows > 0;
+            btnSave.Enabled = btnValidate.Enabled = tbDestinationFile.Enabled = btnOpenDestinationFile.Enabled = LocalizationFactory.Statistics.SourceRows > 0;
         }
 
         private void ResizeGridColumns()
@@ -101,10 +102,20 @@ namespace NSW.KCDLocalizer.Forms
             }
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        private async void BtnSave_Click(object sender, EventArgs e)
         {
             var backupName = $"{Path.GetDirectoryName(tbDestinationFile.Text)}\\{Path.GetFileNameWithoutExtension(tbDestinationFile.Text)}_{DateTime.UtcNow.Ticks}{Path.GetExtension(tbDestinationFile.Text)}";
-            //File.Move(tbDestinationFile.Text);
+            File.Move(tbDestinationFile.Text, backupName);
+            using (var stream = File.CreateText(tbDestinationFile.Text))
+            {
+                await stream.WriteLineAsync("<Table>");
+                foreach (var localization in LocalizationFactory.Localizations)
+                {
+                    await stream.WriteLineAsync($"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationEnglish ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationTranslation ?? string.Empty)}</Cell></Row>");
+                }
+                await stream.WriteLineAsync("</Table>");
+                await stream.FlushAsync();
+            }
         }
     }
 }
