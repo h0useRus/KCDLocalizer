@@ -165,7 +165,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Source:";
+            this.label1.Text = "Source";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
@@ -174,7 +174,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Translation:";
+            this.label2.Text = "Destination";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // gvMain
