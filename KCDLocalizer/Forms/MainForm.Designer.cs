@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openXmlFile = new System.Windows.Forms.OpenFileDialog();
             this.btnOpenSourceFile = new System.Windows.Forms.Button();
             this.btnOpenDestinationFile = new System.Windows.Forms.Button();
@@ -35,6 +36,10 @@
             this.tbDestinationFile = new System.Windows.Forms.TextBox();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.lblSorceRows = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblTranslated = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblWariningRows = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblErrorRows = new System.Windows.Forms.ToolStripStatusLabel();
+            this.mainProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.gvMain = new System.Windows.Forms.DataGridView();
@@ -42,7 +47,10 @@
             this.colEnglishSrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTransaltionDes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSave = new System.Windows.Forms.Button();
-            this.btnValidate = new System.Windows.Forms.Button();
+            this.btnNew = new System.Windows.Forms.Button();
+            this.newXmlFile = new System.Windows.Forms.SaveFileDialog();
+            this.cbHideGood = new System.Windows.Forms.CheckBox();
+            this.btnAddNew = new System.Windows.Forms.Button();
             this.statusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvMain)).BeginInit();
             this.SuspendLayout();
@@ -65,7 +73,7 @@
             // btnOpenDestinationFile
             // 
             this.btnOpenDestinationFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpenDestinationFile.Location = new System.Drawing.Point(763, 44);
+            this.btnOpenDestinationFile.Location = new System.Drawing.Point(705, 44);
             this.btnOpenDestinationFile.Name = "btnOpenDestinationFile";
             this.btnOpenDestinationFile.Size = new System.Drawing.Size(25, 20);
             this.btnOpenDestinationFile.TabIndex = 1;
@@ -82,6 +90,7 @@
             this.tbSourceFile.ReadOnly = true;
             this.tbSourceFile.Size = new System.Drawing.Size(677, 20);
             this.tbSourceFile.TabIndex = 2;
+            this.tbSourceFile.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TbSourceFile_MouseDoubleClick);
             // 
             // tbDestinationFile
             // 
@@ -90,13 +99,18 @@
             this.tbDestinationFile.Location = new System.Drawing.Point(80, 44);
             this.tbDestinationFile.Name = "tbDestinationFile";
             this.tbDestinationFile.ReadOnly = true;
-            this.tbDestinationFile.Size = new System.Drawing.Size(677, 20);
+            this.tbDestinationFile.Size = new System.Drawing.Size(619, 20);
             this.tbDestinationFile.TabIndex = 3;
+            this.tbDestinationFile.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TbDestinationFile_MouseDoubleClick);
             // 
             // statusBar
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblSorceRows});
+            this.lblSorceRows,
+            this.lblTranslated,
+            this.lblWariningRows,
+            this.lblErrorRows,
+            this.mainProgress});
             this.statusBar.Location = new System.Drawing.Point(0, 426);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(800, 24);
@@ -105,12 +119,45 @@
             // 
             // lblSorceRows
             // 
+            this.lblSorceRows.AutoSize = false;
             this.lblSorceRows.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.lblSorceRows.Name = "lblSorceRows";
-            this.lblSorceRows.Size = new System.Drawing.Size(27, 19);
-            this.lblSorceRows.Text = "Src";
+            this.lblSorceRows.Size = new System.Drawing.Size(40, 19);
+            // 
+            // lblTranslated
+            // 
+            this.lblTranslated.AutoSize = false;
+            this.lblTranslated.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.lblTranslated.Name = "lblTranslated";
+            this.lblTranslated.Size = new System.Drawing.Size(40, 19);
+            // 
+            // lblWariningRows
+            // 
+            this.lblWariningRows.AutoSize = false;
+            this.lblWariningRows.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.lblWariningRows.Name = "lblWariningRows";
+            this.lblWariningRows.Size = new System.Drawing.Size(40, 19);
+            // 
+            // lblErrorRows
+            // 
+            this.lblErrorRows.AutoSize = false;
+            this.lblErrorRows.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.lblErrorRows.Name = "lblErrorRows";
+            this.lblErrorRows.Size = new System.Drawing.Size(40, 19);
+            // 
+            // mainProgress
+            // 
+            this.mainProgress.Name = "mainProgress";
+            this.mainProgress.Size = new System.Drawing.Size(100, 18);
+            this.mainProgress.Visible = false;
             // 
             // label1
             // 
@@ -134,6 +181,8 @@
             // 
             this.gvMain.AllowUserToAddRows = false;
             this.gvMain.AllowUserToDeleteRows = false;
+            this.gvMain.AllowUserToResizeColumns = false;
+            this.gvMain.AllowUserToResizeRows = false;
             this.gvMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -184,26 +233,56 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 8;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "Save All";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
-            // btnValidate
+            // btnNew
             // 
-            this.btnValidate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnValidate.Location = new System.Drawing.Point(632, 400);
-            this.btnValidate.Name = "btnValidate";
-            this.btnValidate.Size = new System.Drawing.Size(75, 23);
-            this.btnValidate.TabIndex = 9;
-            this.btnValidate.Text = "Validate";
-            this.btnValidate.UseVisualStyleBackColor = true;
+            this.btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNew.Location = new System.Drawing.Point(736, 44);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(52, 20);
+            this.btnNew.TabIndex = 10;
+            this.btnNew.Text = "New";
+            this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.BtnNew_Click);
+            // 
+            // newXmlFile
+            // 
+            this.newXmlFile.DefaultExt = "xml";
+            // 
+            // cbHideGood
+            // 
+            this.cbHideGood.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbHideGood.AutoSize = true;
+            this.cbHideGood.Location = new System.Drawing.Point(15, 404);
+            this.cbHideGood.Name = "cbHideGood";
+            this.cbHideGood.Size = new System.Drawing.Size(77, 17);
+            this.cbHideGood.TabIndex = 11;
+            this.cbHideGood.Text = "Hide Good";
+            this.cbHideGood.UseVisualStyleBackColor = true;
+            this.cbHideGood.CheckedChanged += new System.EventHandler(this.CbHideTranslated_CheckedChanged);
+            // 
+            // btnAddNew
+            // 
+            this.btnAddNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddNew.Location = new System.Drawing.Point(632, 400);
+            this.btnAddNew.Name = "btnAddNew";
+            this.btnAddNew.Size = new System.Drawing.Size(75, 23);
+            this.btnAddNew.TabIndex = 12;
+            this.btnAddNew.Text = "Add New";
+            this.btnAddNew.UseVisualStyleBackColor = true;
+            this.btnAddNew.Click += new System.EventHandler(this.BtnAddNew_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnValidate);
+            this.Controls.Add(this.btnAddNew);
+            this.Controls.Add(this.cbHideGood);
+            this.Controls.Add(this.btnNew);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.gvMain);
             this.Controls.Add(this.label2);
@@ -213,7 +292,9 @@
             this.Controls.Add(this.tbSourceFile);
             this.Controls.Add(this.btnOpenDestinationFile);
             this.Controls.Add(this.btnOpenSourceFile);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MainForm";
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.statusBar.ResumeLayout(false);
@@ -232,7 +313,6 @@
         private System.Windows.Forms.TextBox tbSourceFile;
         private System.Windows.Forms.TextBox tbDestinationFile;
         private System.Windows.Forms.StatusStrip statusBar;
-        private System.Windows.Forms.ToolStripStatusLabel lblSorceRows;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView gvMain;
@@ -240,6 +320,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colEnglishSrc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltionDes;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnValidate;
+        private System.Windows.Forms.ToolStripProgressBar mainProgress;
+        private System.Windows.Forms.ToolStripStatusLabel lblSorceRows;
+        private System.Windows.Forms.ToolStripStatusLabel lblTranslated;
+        private System.Windows.Forms.ToolStripStatusLabel lblWariningRows;
+        private System.Windows.Forms.ToolStripStatusLabel lblErrorRows;
+        private System.Windows.Forms.Button btnNew;
+        private System.Windows.Forms.SaveFileDialog newXmlFile;
+        private System.Windows.Forms.CheckBox cbHideGood;
+        private System.Windows.Forms.Button btnAddNew;
     }
 }

@@ -40,6 +40,8 @@
             this.tbDestinationTranslation = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.btnEnglishCopy = new System.Windows.Forms.Button();
+            this.btnTranslationCopy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -55,7 +57,6 @@
             // 
             this.tbKey.Location = new System.Drawing.Point(12, 29);
             this.tbKey.Name = "tbKey";
-            this.tbKey.ReadOnly = true;
             this.tbKey.Size = new System.Drawing.Size(469, 20);
             this.tbKey.TabIndex = 1;
             // 
@@ -81,7 +82,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 132);
+            this.label3.Location = new System.Drawing.Point(12, 254);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(97, 13);
             this.label3.TabIndex = 4;
@@ -90,7 +91,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 211);
+            this.label4.Location = new System.Drawing.Point(13, 141);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(97, 13);
             this.label4.TabIndex = 5;
@@ -100,7 +101,7 @@
             // 
             this.tbOriginalTranslation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbOriginalTranslation.Location = new System.Drawing.Point(12, 148);
+            this.tbOriginalTranslation.Location = new System.Drawing.Point(12, 270);
             this.tbOriginalTranslation.Multiline = true;
             this.tbOriginalTranslation.Name = "tbOriginalTranslation";
             this.tbOriginalTranslation.Size = new System.Drawing.Size(776, 60);
@@ -110,7 +111,7 @@
             // 
             this.tbDestinationEnglish.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbDestinationEnglish.Location = new System.Drawing.Point(12, 227);
+            this.tbDestinationEnglish.Location = new System.Drawing.Point(12, 157);
             this.tbDestinationEnglish.Multiline = true;
             this.tbDestinationEnglish.Name = "tbDestinationEnglish";
             this.tbDestinationEnglish.Size = new System.Drawing.Size(776, 60);
@@ -119,7 +120,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 290);
+            this.label5.Location = new System.Drawing.Point(12, 342);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(115, 13);
             this.label5.TabIndex = 8;
@@ -129,7 +130,7 @@
             // 
             this.tbDestinationTranslation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbDestinationTranslation.Location = new System.Drawing.Point(12, 306);
+            this.tbDestinationTranslation.Location = new System.Drawing.Point(16, 358);
             this.tbDestinationTranslation.Multiline = true;
             this.tbDestinationTranslation.Name = "tbDestinationTranslation";
             this.tbDestinationTranslation.Size = new System.Drawing.Size(776, 60);
@@ -139,7 +140,7 @@
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(713, 372);
+            this.btnClose.Location = new System.Drawing.Point(713, 431);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 10;
@@ -150,8 +151,8 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnSave.Location = new System.Drawing.Point(632, 372);
+            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnSave.Location = new System.Drawing.Point(632, 431);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 11;
@@ -159,12 +160,36 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
+            // btnEnglishCopy
+            // 
+            this.btnEnglishCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEnglishCopy.Location = new System.Drawing.Point(766, 132);
+            this.btnEnglishCopy.Name = "btnEnglishCopy";
+            this.btnEnglishCopy.Size = new System.Drawing.Size(22, 22);
+            this.btnEnglishCopy.TabIndex = 12;
+            this.btnEnglishCopy.Text = "↓";
+            this.btnEnglishCopy.UseVisualStyleBackColor = true;
+            this.btnEnglishCopy.Click += new System.EventHandler(this.BtnEnglishCopy_Click);
+            // 
+            // btnTranslationCopy
+            // 
+            this.btnTranslationCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTranslationCopy.Location = new System.Drawing.Point(766, 333);
+            this.btnTranslationCopy.Name = "btnTranslationCopy";
+            this.btnTranslationCopy.Size = new System.Drawing.Size(22, 22);
+            this.btnTranslationCopy.TabIndex = 13;
+            this.btnTranslationCopy.Text = "↓";
+            this.btnTranslationCopy.UseVisualStyleBackColor = true;
+            this.btnTranslationCopy.Click += new System.EventHandler(this.BtnTranslationCopy_Click);
+            // 
             // EditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(800, 400);
+            this.ClientSize = new System.Drawing.Size(800, 458);
+            this.Controls.Add(this.btnTranslationCopy);
+            this.Controls.Add(this.btnEnglishCopy);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tbDestinationTranslation);
@@ -179,6 +204,8 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "EditForm";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -199,5 +226,7 @@
         private System.Windows.Forms.TextBox tbDestinationTranslation;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnEnglishCopy;
+        private System.Windows.Forms.Button btnTranslationCopy;
     }
 }

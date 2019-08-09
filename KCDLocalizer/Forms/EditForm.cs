@@ -6,23 +6,32 @@ namespace NSW.KCDLocalizer.Forms
 {
     public partial class EditForm : Form
     {
-        public Localization Localization { get; }
+        public Localization Current { get; private set; }
 
         public EditForm(Localization localization)
         {
             InitializeComponent();
-            Localization = localization;
+            Current = localization ?? new Localization();
             UpdateControls();
         }
 
         private void UpdateControls()
         {
-            Text = $"Edit {Localization.Key}";
-            tbKey.Text = Localization.Key;
-            tbOriginalEnglish.Text = Localization.OriginalEnglish;
-            tbOriginalTranslation.Text = Localization.OriginalTranslation;
-            tbDestinationEnglish.Text = Localization.DestinationEnglish;
-            tbDestinationTranslation.Text = Localization.DestinationTranslation;
+            if (string.IsNullOrWhiteSpace(Current.Key))
+            {
+                Text = $"Add new";
+                tbKey.TextChanged += OnKeyTextChanged;
+            }
+            else
+            {
+                Text = $"Edit '{Current.Key}'";
+                tbKey.Text = Current.Key;
+                tbKey.ReadOnly = true;
+                tbOriginalEnglish.Text = Current.OriginalEnglish;
+                tbOriginalTranslation.Text = Current.OriginalTranslation;
+                tbDestinationEnglish.Text = Current.DestinationEnglish;
+                tbDestinationTranslation.Text = Current.DestinationTranslation;
+            }
 
             tbOriginalEnglish.TextChanged += OnTextBoxTextChanged;
             tbOriginalTranslation.TextChanged += OnTextBoxTextChanged;
@@ -32,35 +41,54 @@ namespace NSW.KCDLocalizer.Forms
             OnTextBoxTextChanged(this, EventArgs.Empty);
         }
 
-        private void BtnClose_Click(object sender, EventArgs e)
+        private void OnKeyTextChanged(object sender, EventArgs e)
         {
-            Close();
+            var text = tbKey.Text?.Trim();
+            if (string.IsNullOrWhiteSpace(text) || Localization.Current.ContainsKey(tbKey.Text))
+            {
+                tbKey.BackColor = Color.LightSalmon;
+            }
+            else
+            {
+                Current.Key = text;
+                tbKey.BackColor = Color.White;
+            }
         }
 
         private void OnTextBoxTextChanged(object sender, EventArgs e)
         {
-            if (string.Equals(tbOriginalEnglish.Text, tbDestinationEnglish.Text))
-            {
-                tbOriginalEnglish.BackColor = tbDestinationEnglish.BackColor = Color.LightGreen;
-            }
-            else
-            {
-                tbDestinationEnglish.BackColor = Color.LightYellow;
-
-                tbOriginalEnglish.BackColor = string.IsNullOrWhiteSpace(tbOriginalEnglish.Text) ? Color.LightSalmon : tbOriginalEnglish.BackColor;
-                tbDestinationEnglish.BackColor = string.IsNullOrWhiteSpace(tbDestinationEnglish.Text) ? Color.LightSalmon : tbDestinationEnglish.BackColor;
-            }
-
             tbOriginalTranslation.BackColor = string.IsNullOrWhiteSpace(tbOriginalTranslation.Text) ? Color.LightSalmon : Color.White;
+
+            if (string.Equals(tbOriginalEnglish.Text, tbDestinationEnglish.Text, StringComparison.Ordinal))
+                tbOriginalEnglish.BackColor = tbDestinationEnglish.BackColor = Color.LightGreen;
+            else
+                tbOriginalEnglish.BackColor = tbDestinationEnglish.BackColor = Color.LightYellow;
+
+            tbOriginalEnglish.BackColor = string.IsNullOrWhiteSpace(tbOriginalEnglish.Text) ? Color.LightSalmon : tbOriginalEnglish.BackColor;
+            tbDestinationEnglish.BackColor = string.IsNullOrWhiteSpace(tbDestinationEnglish.Text) ? Color.LightSalmon : tbDestinationEnglish.BackColor;
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            Localization.OriginalEnglish = tbOriginalEnglish.Text;
-            Localization.OriginalTranslation = tbOriginalTranslation.Text;
-            Localization.DestinationEnglish = tbDestinationEnglish.Text;
-            Localization.DestinationTranslation = tbDestinationTranslation.Text;
-            BtnClose_Click(sender, e);
+            Current.OriginalEnglish = tbOriginalEnglish.Text;
+            Current.OriginalTranslation = tbOriginalTranslation.Text;
+            Current.DestinationEnglish = tbDestinationEnglish.Text;
+            Current.DestinationTranslation = tbDestinationTranslation.Text;
+        }
+
+        private void BtnEnglishCopy_Click(object sender, EventArgs e)
+        {
+            tbDestinationEnglish.Text = tbOriginalEnglish.Text;
+        }
+
+        private void BtnTranslationCopy_Click(object sender, EventArgs e)
+        {
+            tbDestinationTranslation.Text = tbOriginalTranslation.Text;
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
