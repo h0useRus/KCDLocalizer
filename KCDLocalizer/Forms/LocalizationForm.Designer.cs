@@ -1,6 +1,6 @@
 ﻿namespace NSW.KCDLocalizer.Forms
 {
-    partial class MainForm
+    partial class LocalizationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocalizationForm));
             this.openXmlFile = new System.Windows.Forms.OpenFileDialog();
             this.btnOpenSourceFile = new System.Windows.Forms.Button();
             this.btnOpenDestinationFile = new System.Windows.Forms.Button();
@@ -275,7 +275,7 @@
             this.btnAddNew.UseVisualStyleBackColor = true;
             this.btnAddNew.Click += new System.EventHandler(this.BtnAddNew_Click);
             // 
-            // MainForm
+            // LocalizationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -293,9 +293,9 @@
             this.Controls.Add(this.btnOpenDestinationFile);
             this.Controls.Add(this.btnOpenSourceFile);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "MainForm";
+            this.Name = "LocalizationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "MainForm";
+            this.Text = "LocalizationForm";
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();

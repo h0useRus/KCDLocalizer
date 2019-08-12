@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace NSW.KCDLocalizer.Forms
 {
-    public partial class MainForm : Form
+    public partial class LocalizationForm : Form
     {
-        public MainForm()
+        public LocalizationForm()
         {
             InitializeComponent();
             gvMain.AutoGenerateColumns = false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
 using NSW.KCDLocalizer.Forms;
 
@@ -12,9 +13,10 @@ namespace NSW.KCDLocalizer
         [STAThread]
         static void Main()
         {
+            var title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new ModsForm(title));
         }
     }
 }
