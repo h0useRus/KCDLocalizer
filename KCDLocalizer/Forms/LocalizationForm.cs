@@ -39,7 +39,7 @@ namespace NSW.KCDLocalizer.Forms
 
         private void ResizeGridColumns()
         {
-            colEnglishSrc.Width = colTransaltionDes.Width = (gvMain.Size.Width - colKey.Width - 20)/2;
+            colEnglishSrc.Width = colTransaltionDes.Width = (gvMain.Size.Width - colKey.Width - 20) / 2;
         }
 
         private void UpdateStatistics()
@@ -104,7 +104,7 @@ namespace NSW.KCDLocalizer.Forms
             }
         }
         #endregion
-        
+
         #region Data view event handlers
         private void GvMain_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -151,7 +151,7 @@ namespace NSW.KCDLocalizer.Forms
 
                 row.DefaultCellStyle.BackColor = color;
             }
-        } 
+        }
         #endregion
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
@@ -178,30 +178,29 @@ namespace NSW.KCDLocalizer.Forms
             mainProgress.Step = 0;
             mainProgress.Visible = true;
 
-            try
-            {
-                var backupName =
-                    $"{Path.GetDirectoryName(tbDestinationFile.Text)}\\{Path.GetFileNameWithoutExtension(tbDestinationFile.Text)}_{DateTime.UtcNow.Ticks}{Path.GetExtension(tbDestinationFile.Text)}";
-                File.Move(tbDestinationFile.Text, backupName);
-                using (var stream = File.CreateText(tbDestinationFile.Text))
+            if (FileHelpers.TryCreateBackup(tbDestinationFile.Text, out _))
+                try
                 {
-                    await stream.WriteLineAsync("<Table>");
-                    foreach (var localization in Localization.Current)
+                    using (var stream = File.CreateText(tbDestinationFile.Text))
                     {
-                        await stream.WriteLineAsync($"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationEnglish ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationTranslation ?? string.Empty)}</Cell></Row>");
-                        mainProgress.Step++;
-                        Application.DoEvents();
-                    }
+                        await stream.WriteLineAsync("<Table>");
+                        foreach (var localization in Localization.Current)
+                        {
+                            await stream.WriteLineAsync(
+                                $"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationEnglish ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationTranslation ?? string.Empty)}</Cell></Row>");
+                            mainProgress.Step++;
+                            Application.DoEvents();
+                        }
 
-                    mainProgress.Visible = false;
-                    await stream.WriteLineAsync("</Table>");
-                    await stream.FlushAsync();
+                        mainProgress.Visible = false;
+                        await stream.WriteLineAsync("</Table>");
+                        await stream.FlushAsync();
+                    }
                 }
-            }
-            finally
-            {
-                mainProgress.Visible = false;
-            }
+                finally
+                {
+                    mainProgress.Visible = false;
+                }
         }
 
         private void CbHideTranslated_CheckedChanged(object sender, EventArgs e)

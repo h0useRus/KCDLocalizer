@@ -31,18 +31,25 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModsForm));
             this.mainMenu = new System.Windows.Forms.ToolStrip();
+            this.menuOpenMod = new System.Windows.Forms.ToolStripButton();
+            this.menuTranslate = new System.Windows.Forms.ToolStripButton();
+            this.menuOpenModMerge = new System.Windows.Forms.ToolStripButton();
+            this.menuSaveMerge = new System.Windows.Forms.ToolStripButton();
             this.openModFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.modTree = new System.Windows.Forms.TreeView();
             this.iconsList = new System.Windows.Forms.ImageList(this.components);
-            this.menuOpenMod = new System.Windows.Forms.ToolStripButton();
-            this.menuOpenModMerge = new System.Windows.Forms.ToolStripButton();
-            this.menuSaveMerge = new System.Windows.Forms.ToolStripButton();
+            this.cmsLocalization = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmsLocalizationAddLanguage = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsLanguageFile = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmsLanguageFileAddFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.cmsLocalization.SuspendLayout();
+            this.cmsLanguageFile.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -50,12 +57,58 @@
             this.mainMenu.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuOpenMod,
+            this.menuTranslate,
             this.menuOpenModMerge,
             this.menuSaveMerge});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Size = new System.Drawing.Size(800, 39);
             this.mainMenu.TabIndex = 0;
+            // 
+            // menuOpenMod
+            // 
+            this.menuOpenMod.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.menuOpenMod.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_open_box_48;
+            this.menuOpenMod.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuOpenMod.Name = "menuOpenMod";
+            this.menuOpenMod.Size = new System.Drawing.Size(36, 36);
+            this.menuOpenMod.Text = "Open mod";
+            this.menuOpenMod.ToolTipText = "Open mod";
+            this.menuOpenMod.Click += new System.EventHandler(this.MenuOpenMod_Click);
+            // 
+            // menuTranslate
+            // 
+            this.menuTranslate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.menuTranslate.Image = global::NSW.KCDLocalizer.Properties.Resources.translate_ico;
+            this.menuTranslate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuTranslate.Name = "menuTranslate";
+            this.menuTranslate.Size = new System.Drawing.Size(36, 36);
+            this.menuTranslate.Text = "Translate mod";
+            this.menuTranslate.ToolTipText = "Translate mod texts";
+            // 
+            // menuOpenModMerge
+            // 
+            this.menuOpenModMerge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.menuOpenModMerge.Enabled = false;
+            this.menuOpenModMerge.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_merge_files_48;
+            this.menuOpenModMerge.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuOpenModMerge.Name = "menuOpenModMerge";
+            this.menuOpenModMerge.Size = new System.Drawing.Size(36, 36);
+            this.menuOpenModMerge.Text = "Open Merge";
+            this.menuOpenModMerge.ToolTipText = "Open mod for merge";
+            this.menuOpenModMerge.Click += new System.EventHandler(this.MenuOpenModMerge_Click);
+            // 
+            // menuSaveMerge
+            // 
+            this.menuSaveMerge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.menuSaveMerge.Enabled = false;
+            this.menuSaveMerge.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_merge_48;
+            this.menuSaveMerge.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuSaveMerge.Name = "menuSaveMerge";
+            this.menuSaveMerge.Size = new System.Drawing.Size(36, 36);
+            this.menuSaveMerge.Text = "Save merge";
+            this.menuSaveMerge.ToolTipText = "Save merge results";
+            this.menuSaveMerge.Click += new System.EventHandler(this.MenuSaveMerge_Click);
             // 
             // statusBar
             // 
@@ -103,39 +156,35 @@
             this.iconsList.Images.SetKeyName(5, "icons8-image-file-32.png");
             this.iconsList.Images.SetKeyName(6, "icons8-code-file-32.png");
             // 
-            // menuOpenMod
+            // cmsLocalization
             // 
-            this.menuOpenMod.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.menuOpenMod.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_open_box_48;
-            this.menuOpenMod.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.menuOpenMod.Name = "menuOpenMod";
-            this.menuOpenMod.Size = new System.Drawing.Size(36, 36);
-            this.menuOpenMod.Text = "Open mod";
-            this.menuOpenMod.ToolTipText = "Open mod";
-            this.menuOpenMod.Click += new System.EventHandler(this.MenuOpenMod_Click);
+            this.cmsLocalization.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmsLocalizationAddLanguage});
+            this.cmsLocalization.Name = "cmsLocalization";
+            this.cmsLocalization.ShowImageMargin = false;
+            this.cmsLocalization.ShowItemToolTips = false;
+            this.cmsLocalization.Size = new System.Drawing.Size(127, 26);
             // 
-            // menuOpenModMerge
+            // cmsLocalizationAddLanguage
             // 
-            this.menuOpenModMerge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.menuOpenModMerge.Enabled = false;
-            this.menuOpenModMerge.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_merge_files_48;
-            this.menuOpenModMerge.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.menuOpenModMerge.Name = "menuOpenModMerge";
-            this.menuOpenModMerge.Size = new System.Drawing.Size(36, 36);
-            this.menuOpenModMerge.Text = "Open Merge";
-            this.menuOpenModMerge.ToolTipText = "Open mod for merge";
-            this.menuOpenModMerge.Click += new System.EventHandler(this.MenuOpenModMerge_Click);
+            this.cmsLocalizationAddLanguage.Name = "cmsLocalizationAddLanguage";
+            this.cmsLocalizationAddLanguage.Size = new System.Drawing.Size(126, 22);
+            this.cmsLocalizationAddLanguage.Text = "Add Language";
+            this.cmsLocalizationAddLanguage.Click += new System.EventHandler(this.CmsLocalizationAddLanguage_Click);
             // 
-            // menuSaveMerge
+            // cmsLanguageFile
             // 
-            this.menuSaveMerge.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.menuSaveMerge.Enabled = false;
-            this.menuSaveMerge.Image = global::NSW.KCDLocalizer.Properties.Resources.icons8_merge_48;
-            this.menuSaveMerge.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.menuSaveMerge.Name = "menuSaveMerge";
-            this.menuSaveMerge.Size = new System.Drawing.Size(36, 36);
-            this.menuSaveMerge.Text = "Save merge";
-            this.menuSaveMerge.ToolTipText = "Save merge results";
+            this.cmsLanguageFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmsLanguageFileAddFile});
+            this.cmsLanguageFile.Name = "cmsLanguageFile";
+            this.cmsLanguageFile.ShowImageMargin = false;
+            this.cmsLanguageFile.Size = new System.Drawing.Size(156, 48);
+            // 
+            // cmsLanguageFileAddFile
+            // 
+            this.cmsLanguageFileAddFile.Name = "cmsLanguageFileAddFile";
+            this.cmsLanguageFileAddFile.Size = new System.Drawing.Size(180, 22);
+            this.cmsLanguageFileAddFile.Text = "Add File";
             // 
             // ModsForm
             // 
@@ -147,12 +196,15 @@
             this.Controls.Add(this.mainMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ModsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ModsForm";
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.cmsLocalization.ResumeLayout(false);
+            this.cmsLanguageFile.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -169,5 +221,10 @@
         private System.Windows.Forms.TreeView modTree;
         private System.Windows.Forms.ImageList iconsList;
         private System.Windows.Forms.ToolStripButton menuSaveMerge;
+        private System.Windows.Forms.ToolStripButton menuTranslate;
+        private System.Windows.Forms.ContextMenuStrip cmsLocalization;
+        private System.Windows.Forms.ToolStripMenuItem cmsLocalizationAddLanguage;
+        private System.Windows.Forms.ContextMenuStrip cmsLanguageFile;
+        private System.Windows.Forms.ToolStripMenuItem cmsLanguageFileAddFile;
     }
 }

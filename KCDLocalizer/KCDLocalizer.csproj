@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileHelpers.cs" />
     <Compile Include="Forms\EditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,7 +71,14 @@
     <Compile Include="Forms\ModsForm.Designer.cs">
       <DependentUpon>ModsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SelectLanguageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectLanguageForm.Designer.cs">
+      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Localization.cs" />
+    <Compile Include="LocalizationLanguage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\EditForm.resx">
@@ -81,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModsForm.resx">
       <DependentUpon>ModsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectLanguageForm.resx">
+      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -110,6 +121,7 @@
     <None Include="Resources\icons8-open-box-48.png" />
     <None Include="Resources\icons8-merge-files-48.png" />
     <None Include="Resources\icons8-merge-48.png" />
+    <None Include="Resources\translate_ico.ico" />
     <Content Include="shield_security.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

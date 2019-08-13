@@ -61,6 +61,33 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Caption_Error {
+            get {
+                return ResourceManager.GetString("Caption_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select destination folder.
+        /// </summary>
+        internal static string Caption_Select_destination_folder {
+            get {
+                return ResourceManager.GetString("Caption_Select_destination_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select mod folder.
+        /// </summary>
+        internal static string Caption_Select_mod_folder {
+            get {
+                return ResourceManager.GetString("Caption_Select_mod_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap icons8_merge_48 {
@@ -97,6 +124,25 @@ namespace NSW.KCDLocalizer.Properties {
             get {
                 object obj = ResourceManager.GetObject("icons8-open-box-48", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap translate_ico {
+            get {
+                object obj = ResourceManager.GetObject("translate_ico", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read mod packages!.
+        /// </summary>
+        internal static string Unable_to_read_mod_packages {
+            get {
+                return ResourceManager.GetString("Unable_to_read_mod_packages", resourceCulture);
             }
         }
     }
