@@ -15,26 +15,20 @@ namespace NSW.KCDLocalizer
         public string DestinationEnglish { get; set; }
         public string DestinationTranslation { get; set; }
 
-        public bool IsGood => !string.IsNullOrWhiteSpace(OriginalEnglish)
-                              && !string.IsNullOrWhiteSpace(OriginalTranslation)
-                              && !string.IsNullOrWhiteSpace(DestinationEnglish)
-                              && !string.IsNullOrWhiteSpace(DestinationTranslation);
-
-        public bool IsNew => string.IsNullOrWhiteSpace(DestinationEnglish) &&
-                             string.IsNullOrWhiteSpace(DestinationTranslation);
-
+        public bool IsTranslated => !string.IsNullOrWhiteSpace(OriginalTranslation) && !IsError;
         public bool IsError => string.IsNullOrWhiteSpace(OriginalEnglish);
-
-        public bool IsWarning => string.IsNullOrWhiteSpace(DestinationEnglish)
-                                 || string.IsNullOrWhiteSpace(DestinationTranslation)
-                                 || string.IsNullOrWhiteSpace(OriginalTranslation)
-                                 || !string.Equals(OriginalEnglish, DestinationEnglish, StringComparison.Ordinal);
+        public bool IsWarning => !string.IsNullOrWhiteSpace(DestinationEnglish)
+                                 && !string.IsNullOrWhiteSpace(OriginalEnglish)
+                                 && !string.IsNullOrWhiteSpace(DestinationEnglish)
+                                 && !string.Equals(OriginalEnglish, DestinationEnglish, StringComparison.Ordinal);
+        public bool IsNew => string.IsNullOrWhiteSpace(OriginalEnglish) &&
+                             !string.IsNullOrWhiteSpace(DestinationEnglish);
 
         public override string ToString() => Key;
 
         public static readonly Dictionary<string, Localization> Current = new Dictionary<string, Localization>(StringComparer.OrdinalIgnoreCase);
 
-        public static async Task<bool> LoadSourceLocalizationsAsync(Stream stream)
+        public static async Task<bool> LoadSourceLocalizationsAsync(Stream stream, bool isNew)
         {
             try
             {
@@ -80,7 +74,8 @@ namespace NSW.KCDLocalizer
                                             Current[cellId].OriginalEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                         case 2:
-                                            Current[cellId].OriginalTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if(!isNew)
+                                                Current[cellId].OriginalTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                     }
                                 }
@@ -151,6 +146,9 @@ namespace NSW.KCDLocalizer
                                             break;
                                         case 2:
                                             Current[cellId].DestinationTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if (string.IsNullOrWhiteSpace(Current[cellId].OriginalTranslation))
+                                                Current[cellId].OriginalTranslation =
+                                                    Current[cellId].DestinationTranslation;
                                             break;
                                     }
                                 }

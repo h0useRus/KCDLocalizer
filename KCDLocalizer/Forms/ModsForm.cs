@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using NSW.KCDLocalizer.Properties;
 
 namespace NSW.KCDLocalizer.Forms
@@ -15,13 +16,10 @@ namespace NSW.KCDLocalizer.Forms
         private const string LocalizationFolder = "Localization";
 
         private readonly string _title;
-        private readonly TreeNode _dataNode = new TreeNode(DataFolder, 0, 0);
-        private readonly TreeNode _localizationNode = new TreeNode(LocalizationFolder, 1, 1);
+        private readonly TreeNode _dataNode = new TreeNode(DataFolder, 0, 0) { Tag = NodeTag.Root };
+        private readonly TreeNode _localizationNode = new TreeNode(LocalizationFolder, 1, 1) { Tag = NodeTag.Root };
 
-        private string _primaryModFolder;
-        private string _secondaryModFolder;
-        private int _conflicts = 0;
-        private int _new = 0;
+        private ModManifest _manifest;
 
         public ModsForm(string title)
         {
@@ -35,55 +33,53 @@ namespace NSW.KCDLocalizer.Forms
 
         private void UpdateControls()
         {
-            Text = _title + (!string.IsNullOrWhiteSpace(_primaryModFolder) ? $"| {_primaryModFolder}" : string.Empty);
-            modTree.Enabled = !string.IsNullOrWhiteSpace(_primaryModFolder);
-            menuSaveMerge.Enabled = !string.IsNullOrWhiteSpace(_secondaryModFolder) && _conflicts == 0;
-            menuOpenModMerge.Enabled = !string.IsNullOrWhiteSpace(_primaryModFolder) && string.IsNullOrWhiteSpace(_secondaryModFolder);
+            Text = _title + (!string.IsNullOrWhiteSpace(_manifest?.Info?.Name) ? $" | {_manifest.Info.Name}" : string.Empty);
+            gpModInfo.Enabled = modTree.Enabled = !string.IsNullOrWhiteSpace(tbModFolder.Text);
+            GpModInfo_Resize(this, EventArgs.Empty);
         }
 
-        private void MenuOpenMod_Click(object sender, EventArgs e)
+        private void BtnOpenMod_Click(object sender, EventArgs e)
         {
             openModFolder.Description = Resources.Caption_Select_mod_folder;
             openModFolder.ShowNewFolderButton = false;
             if (openModFolder.ShowDialog() == DialogResult.OK)
             {
                 ClearAll();
-                _primaryModFolder = openModFolder.SelectedPath;
-                LoadModStructure(_primaryModFolder, _dataNode, false);
-                LoadModStructure(_primaryModFolder, _localizationNode, true);
+                tbModFolder.Text = openModFolder.SelectedPath;
+                _manifest = LoadModManifest(openModFolder.SelectedPath);
+                tbModInfoName.Text = _manifest.Info.Name;
+                tbModInfoDesc.Text = _manifest.Info.Description;
+                tbModInfoAuthor.Text = _manifest.Info.Author;
+                tbModInfoVersion.Text = _manifest.Info.Version ?? "1.0.0.0";
+                tbModInfoCreated.Text = _manifest.Info.CreatedOn ?? DateTime.Today.ToString("d");
+                lbModInfoDependencies.DataSource = _manifest.Info.Dependencies;
+                lbModInfoGameVersions.DataSource = _manifest.Supports;
+                LoadModStructure(openModFolder.SelectedPath, _dataNode, false);
+                LoadModStructure(openModFolder.SelectedPath, _localizationNode, true);
                 UpdateControls();
             }
         }
 
-        private void MenuOpenModMerge_Click(object sender, EventArgs e)
+        private ModManifest LoadModManifest(string modRootPath)
         {
-            openModFolder.Description = Resources.Caption_Select_mod_folder;
-            openModFolder.ShowNewFolderButton = false;
-            if (openModFolder.ShowDialog() == DialogResult.OK)
+            ModManifest manifest = null;
+            var manifestFileName = Path.Combine(modRootPath, "mod.manifest");
+            if (File.Exists(manifestFileName))
             {
-                _secondaryModFolder = openModFolder.SelectedPath;
-                LoadModStructure(_secondaryModFolder, _dataNode, false, true);
-                LoadModStructure(_secondaryModFolder, _localizationNode, true, true);
-                UpdateControls();
+                using (var stream = File.OpenRead(manifestFileName))
+                {
+                    var serializer = new XmlSerializer(typeof(ModManifest));
+                    manifest = serializer.Deserialize(stream) as ModManifest;
+                }
             }
-        }
 
-        private void MenuSaveMerge_Click(object sender, EventArgs e)
-        {
-            openModFolder.Description = Resources.Caption_Select_destination_folder;
-            openModFolder.ShowNewFolderButton = true;
-            if (openModFolder.ShowDialog() == DialogResult.OK)
+            if (manifest == null)
             {
-                var parts = openModFolder.SelectedPath.Split('\\');
-                CreateModPak(openModFolder.SelectedPath, parts[parts.Length - 1]);
+                var pathParts = modRootPath.Split('\\');
+                manifest = new ModManifest { Info = new ModManifestInfo { Name = pathParts[pathParts.Length - 1] } };
             }
-        }
 
-        private void CreateModPak(string modPath, string modName)
-        {
-            var dataFolder = Path.Combine(modPath, DataFolder);
-            if (!Directory.Exists(dataFolder))
-                Directory.CreateDirectory(dataFolder);
+            return manifest;
         }
 
         private void LoadModStructure(string rootPath, TreeNode structureNode, bool addFileNode, bool checkConflicts = false)
@@ -97,10 +93,11 @@ namespace NSW.KCDLocalizer.Forms
                     var files = Directory.GetFiles(structureFolder, "*.pak");
                     foreach (var fileName in files)
                     {
+                        var key = Path.GetFileName(fileName).ToLower();
                         var root = structureNode;
+                        var currentLocalization = LocalizationLanguage.Supported.FirstOrDefault(l => string.Equals(key, l.FileName, StringComparison.OrdinalIgnoreCase));
                         if (addFileNode)
                         {
-                            var key = Path.GetFileName(fileName).ToLower();
                             if (structureNode.Nodes.ContainsKey(key))
                             {
                                 root = structureNode.Nodes[key];
@@ -108,18 +105,19 @@ namespace NSW.KCDLocalizer.Forms
                             else
                             {
                                 root = structureNode.Nodes.Add(key, Path.GetFileName(fileName), 1, 1);
-                                root.Tag = LocalizationLanguage.Supported.FirstOrDefault(l => string.Equals(key, l.FileName, StringComparison.OrdinalIgnoreCase));
-                                //root.ContextMenuStrip = cmsLanguageFile;
+                                root.Tag = NodeTag.CreatePackage(fileName, currentLocalization);
                                 if (checkConflicts)
                                     root.ForeColor = Color.Green;
                             }
                         }
-                        ReadPackage(fileName, root, checkConflicts);
+                        ReadPackage(fileName, root, currentLocalization, checkConflicts);
                     }
                 }
+                structureNode.Expand();
             }
             catch
             {
+                structureNode.Nodes.Clear();
                 MessageBox.Show(Resources.Unable_to_read_mod_packages, Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -128,7 +126,7 @@ namespace NSW.KCDLocalizer.Forms
             }
         }
 
-        private void ReadPackage(string pakFileName, TreeNode rootNode, bool checkConflicts)
+        private void ReadPackage(string pakFileName, TreeNode rootNode, LocalizationLanguage localization, bool checkConflicts)
         {
             using (var pakFile = ZipFile.OpenRead(pakFileName))
             {
@@ -148,13 +146,16 @@ namespace NSW.KCDLocalizer.Forms
                             var node = parent.Nodes.Add(key, names[i], imageIndex, imageIndex);
                             if (isFile)
                             {
-                                node.Tag = new List<string> { fileTag };
+                                node.Tag = NodeTag.CreateFile(fileTag, localization, false);
                                 if (checkConflicts)
                                 {
-                                    _new++;
                                     node.ForeColor = Color.Green;
                                     ExpandFullNode(parent);
                                 }
+                            }
+                            else
+                            {
+                                node.Tag = NodeTag.Folder;
                             }
                             parent = node;
                         }
@@ -163,11 +164,10 @@ namespace NSW.KCDLocalizer.Forms
                             parent = parent.Nodes[key];
                             if (isFile)
                             {
-                                var refs = (List<string>)parent.Tag;
-                                refs.Add(fileTag);
-                                if (refs.Count > 1)
+                                var tag = (NodeTag)parent.Tag;
+                                tag.Sources.Add(fileTag);
+                                if (tag.Sources.Count > 1)
                                 {
-                                    _conflicts++;
                                     parent.ForeColor = Color.Red;
                                     ExpandFullNode(parent);
                                 }
@@ -211,10 +211,15 @@ namespace NSW.KCDLocalizer.Forms
 
         private void ClearAll()
         {
-            _new = _conflicts = 0;
-            _primaryModFolder = _secondaryModFolder = null;
             _localizationNode.Nodes.Clear();
             _dataNode.Nodes.Clear();
+            tbModInfoName.Text =
+                tbModInfoDesc.Text =
+                    tbModInfoAuthor.Text =
+                        tbModInfoVersion.Text =
+                            tbModInfoCreated.Text = null;
+            lbModInfoDependencies.DataSource = null;
+            lbModInfoGameVersions.DataSource = null;
         }
 
         private void CmsLocalizationAddLanguage_Click(object sender, EventArgs e)
@@ -222,29 +227,35 @@ namespace NSW.KCDLocalizer.Forms
             var languages = new List<LocalizationLanguage>();
             foreach (TreeNode node in _localizationNode.Nodes)
             {
-                if(node.Tag is LocalizationLanguage language)
-                    languages.Add(language);
+                if(node.Tag is NodeTag tag && tag.Localization != null)
+                    languages.Add(tag.Localization);
             }
 
             using (var form = new SelectLanguageForm(languages))
             {
+                form.Text = Resources.Caption_Add_Localization;
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     if (form.SelectedLanguage != null)
                     {
                         modTree.BeginUpdate();
-                        var node = _localizationNode.Nodes.Add(form.SelectedLanguage.FileName, form.SelectedLanguage.FileName, 1, 1);
+                        var node = _localizationNode.Nodes.Add(form.SelectedLanguage.FileName.ToLower(), form.SelectedLanguage.FileName, 1, 1);
                         node.ForeColor = Color.Blue;
-                        //node.ContextMenuStrip = cmsLanguageFile;
+                        node.Tag = NodeTag.CreateFile(form.SelectedLanguage.FileName, form.SelectedLanguage, true);
+
                         var sourceLanguage = languages.FirstOrDefault(l => l.Name == "English");
                         if (sourceLanguage == null && languages.Count > 0)
                             sourceLanguage = languages[0];
 
                         var sourceNode = FindLanguageNode(sourceLanguage);
                         if (sourceNode != null)
-                            foreach (TreeNode treeNode in sourceNode.Nodes)
+                            foreach (TreeNode sourceFileNode in sourceNode.Nodes)
                             {
-                                var fileNode = node.Nodes.Add(treeNode.Name, treeNode.Text, treeNode.ImageIndex, treeNode.SelectedImageIndex);
+                                var fileNode = node.Nodes.Add(sourceFileNode.Name, sourceFileNode.Text, sourceFileNode.ImageIndex, sourceFileNode.SelectedImageIndex);
+                                if (sourceFileNode.Tag is NodeTag tag)
+                                {
+                                    fileNode.Tag = NodeTag.CreateFile(tag.Sources[0], form.SelectedLanguage, true);
+                                }
                                 fileNode.ForeColor = Color.Blue;
                             }
                         modTree.EndUpdate();
@@ -259,11 +270,57 @@ namespace NSW.KCDLocalizer.Forms
             if(findLanguage!=null)
                 foreach (TreeNode node in _localizationNode.Nodes)
                 {
-                    if(node.Tag is LocalizationLanguage language)
-                        if (language.Name == findLanguage.Name)
+                    if(node.Tag is NodeTag tag && tag.Localization != null)
+                        if (tag.Localization.Name == findLanguage.Name)
                             return node;
                 }
             return null;
+        }
+
+        private void GpModInfo_Resize(object sender, EventArgs e)
+        {
+            var fullsize = (gpModInfo.Size.Width - 20) / 2;
+            lbModInfoDependencies.Width = fullsize;
+            
+            lbModInfoGameVersions.Location = new Point(lbModInfoDependencies.Location.X + lbModInfoDependencies.Width + 7, lbModInfoGameVersions.Location.Y);
+            lbModInfoGameVersions.Width = fullsize;
+
+            label8.Location = new Point(lbModInfoDependencies.Location.X + lbModInfoDependencies.Width + 7, label8.Location.Y);
+        }
+
+        private void ModTree_DoubleClick(object sender, EventArgs e)
+        {
+            var selectedNode = modTree.SelectedNode;
+            if (selectedNode?.Tag is NodeTag tag)
+            {
+                switch (tag.Type)
+                {
+                    case NodeType.Root:
+                        break;
+                    case NodeType.Package:
+                        break;
+                    case NodeType.Folder:
+                        break;
+                    case NodeType.File:
+                        if (tag.Localization != null)
+                        {
+                            var fileLink = tag.Sources[0].Split(':');
+                            var packageFile = Path.Combine(tbModFolder.Text, LocalizationFolder, fileLink[0] + ".pak");
+                            var fileName = fileLink[1];
+                            if (MessageBox.Show($"Do you want open '{fileName}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                if(FileHelpers.TryExtractTemp(packageFile, fileName, out var tempFile ))
+                                    using (var form = new LocalizationForm(tempFile, tag.IsNew, tag.Localization, fileName))
+                                    {
+                                        form.ShowDialog(this);
+                                    }
+                            }
+                        }
+                        break;
+                    default:
+                        return;
+                }
+            }
         }
     }
 }

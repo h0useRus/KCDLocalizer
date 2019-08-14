@@ -61,6 +61,15 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Localization.
+        /// </summary>
+        internal static string Caption_Add_Localization {
+            get {
+                return ResourceManager.GetString("Caption_Add_Localization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Caption_Error {
@@ -79,7 +88,7 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select mod folder.
+        ///   Looks up a localized string similar to Please select root mod folder which must contain &apos;Data&apos; and optional &apos;Localization&apos; folders..
         /// </summary>
         internal static string Caption_Select_mod_folder {
             get {
@@ -123,6 +132,26 @@ namespace NSW.KCDLocalizer.Properties {
         internal static System.Drawing.Bitmap icons8_open_box_48 {
             get {
                 object obj = ResourceManager.GetObject("icons8-open-box-48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap open_box {
+            get {
+                object obj = ResourceManager.GetObject("open-box", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap open_mod {
+            get {
+                object obj = ResourceManager.GetObject("open_mod", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

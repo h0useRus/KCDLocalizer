@@ -15,15 +15,18 @@
 
         public static LocalizationLanguage[] Supported => new[]
         {
-            new LocalizationLanguage("Chinese", "chineses_xml.pak"),
-            new LocalizationLanguage("Czech", "czech_xml.pak"),
-            new LocalizationLanguage("English", "english_xml.pak"),
-            new LocalizationLanguage("French", "french_xml.pak"),
-            new LocalizationLanguage("German", "german_xml.pak"),
-            new LocalizationLanguage("Italian", "italian_xml.pak"),
-            new LocalizationLanguage("Russian", "russian_xml.pak"),
-            new LocalizationLanguage("Spanish", "spanish_xml.pak"),
-            new LocalizationLanguage("Turkish", "turkish_xml.pak")
+            new LocalizationLanguage("Chinese", "Chineses_xml.pak"),
+            new LocalizationLanguage("Czech", "Czech_xml.pak"),
+            new LocalizationLanguage("English", "English_xml.pak"),
+            new LocalizationLanguage("Estonian", "Estonian_xml.pak"),
+            new LocalizationLanguage("French", "French_xml.pak"),
+            new LocalizationLanguage("German", "German_xml.pak"),
+            new LocalizationLanguage("Italian", "Italian_xml.pak"),
+            new LocalizationLanguage("Polish", "Polish_xml.pak"),
+            new LocalizationLanguage("Russian", "Russian_xml.pak"),
+            new LocalizationLanguage("Spanish", "Spanish_xml.pak"),
+            new LocalizationLanguage("Turkish", "Turkish_xml.pak"),
+            new LocalizationLanguage("Ukrainian", "Ukrainian_xml.pak")
         };
     }
 }

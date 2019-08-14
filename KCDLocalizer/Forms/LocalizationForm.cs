@@ -10,18 +10,38 @@ namespace NSW.KCDLocalizer.Forms
 {
     public partial class LocalizationForm : Form
     {
-        public LocalizationForm()
+        private readonly string _sourceFileName;
+        private readonly bool _isNew;
+        private readonly string _originalFileName;
+        private readonly LocalizationLanguage _language;
+
+        public LocalizationForm(string sourceFile, bool isNew, LocalizationLanguage language, string originalFileName)
         {
             InitializeComponent();
             gvMain.AutoGenerateColumns = false;
+            _sourceFileName = sourceFile;
+            _isNew = isNew;
+            _language = language;
+            _originalFileName = originalFileName;
+            LoadSourceFile();
+        }
+
+        private async void LoadSourceFile()
+        {
+            if(!string.IsNullOrWhiteSpace(_sourceFileName))
+                using (var stream = File.OpenRead(_sourceFileName))
+                {
+                    await Localization.LoadSourceLocalizationsAsync(stream, _isNew);
+                    UpdateStatistics();
+                    BindTable();
+                }
             UpdateControls();
         }
 
         private void UpdateControls()
         {
-            Text = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-            cbHideGood.Enabled =
-                btnNew.Enabled =
+            Text = $"{_language.Name} Localization {_originalFileName}";
+            cbHideTranslated.Enabled =
                     btnAddNew.Enabled =
                         btnSave.Enabled =
                             tbDestinationFile.Enabled =
@@ -31,8 +51,8 @@ namespace NSW.KCDLocalizer.Forms
         private void BindTable()
         {
             gvMain.DataSource = null;
-            gvMain.DataSource = (cbHideGood.Checked
-                ? Localization.Current.Values.Where(i => i.IsNew || i.IsWarning || i.IsError)
+            gvMain.DataSource = (cbHideTranslated.Checked
+                ? Localization.Current.Values.Where(i => !i.IsTranslated)
                 : Localization.Current.Values).ToList();
             ResizeGridColumns();
         }
@@ -45,38 +65,26 @@ namespace NSW.KCDLocalizer.Forms
         private void UpdateStatistics()
         {
             lblSorceRows.Text = Localization.Current.Count.ToString();
-            lblTranslated.Text = Localization.Current.Count(i => i.Value.IsGood).ToString();
-            lblWariningRows.Text = Localization.Current.Count(i => i.Value.IsWarning).ToString();
             lblErrorRows.Text = Localization.Current.Count(i => i.Value.IsError).ToString();
         }
 
         #region Src/Des file event handlers
-        private async void BtnOpenSourceFile_Click(object sender, System.EventArgs e)
-        {
-            if (openXmlFile.ShowDialog() == DialogResult.OK)
-            {
-                tbSourceFile.Text = openXmlFile.FileName;
-                tbDestinationFile.Text = null;
-                using (var stream = openXmlFile.OpenFile())
-                    await Localization.LoadSourceLocalizationsAsync(stream);
-                UpdateStatistics();
-            }
-
-            BindTable();
-            UpdateControls();
-        }
-
-        private void TbSourceFile_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            BtnOpenSourceFile_Click(sender, EventArgs.Empty);
-        }
 
         private async void BtnOpenDestinationFile_Click(object sender, System.EventArgs e)
         {
             if (openXmlFile.ShowDialog() == DialogResult.OK)
             {
+                var fileName = GetFile(openXmlFile.FileName, _originalFileName);
+
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    MessageBox.Show(this, "The localization file not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 tbDestinationFile.Text = openXmlFile.FileName;
-                using (var stream = openXmlFile.OpenFile())
+
+                using (var stream = File.OpenRead(fileName))
                     await Localization.LoadDestinationLocalizationsAsync(stream);
                 UpdateStatistics();
             }
@@ -85,23 +93,28 @@ namespace NSW.KCDLocalizer.Forms
             UpdateControls();
         }
 
+        private string GetFile(string fileName, string originalFileName)
+        {
+            var extension = Path.GetExtension(fileName);
+            if(string.Equals(extension,".xml", StringComparison.OrdinalIgnoreCase))
+            {
+                return fileName;
+            }
+
+            if(string.Equals(extension,".pak", StringComparison.OrdinalIgnoreCase))
+            {
+                if (FileHelpers.TryExtractTemp(fileName, originalFileName, out var tempFileName))
+                {
+                    return tempFileName;
+                }
+            }
+
+            return null;
+        }
+
         private void TbDestinationFile_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             BtnOpenDestinationFile_Click(sender, EventArgs.Empty);
-        }
-
-        private void BtnNew_Click(object sender, EventArgs e)
-        {
-            if (newXmlFile.ShowDialog() == DialogResult.OK)
-            {
-                tbDestinationFile.Text = newXmlFile.FileName;
-                foreach (var localization in Localization.Current)
-                {
-                    localization.Value.DestinationEnglish = localization.Value.OriginalEnglish;
-                    localization.Value.DestinationTranslation = null;
-                }
-                UpdateStatistics();
-            }
         }
         #endregion
 
@@ -122,14 +135,11 @@ namespace NSW.KCDLocalizer.Forms
 
         private void GvMain_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            if (string.IsNullOrEmpty(tbDestinationFile.Text))
-                return;
-
             var row = gvMain.Rows[e.RowIndex];
             if (row.DataBoundItem is Localization localization)
             {
                 var color = Color.White;
-                if (localization.IsGood)
+                if (localization.IsTranslated)
                 {
                     color = Color.LightGreen;
                 }
@@ -139,14 +149,14 @@ namespace NSW.KCDLocalizer.Forms
                     color = Color.LightYellow;
                 }
 
-                if (localization.IsNew)
-                {
-                    color = Color.LightBlue;
-                }
-
                 if (localization.IsError)
                 {
                     color = Color.LightSalmon;
+                }
+
+                if (localization.IsNew)
+                {
+                    color = Color.LightSkyBlue;
                 }
 
                 row.DefaultCellStyle.BackColor = color;

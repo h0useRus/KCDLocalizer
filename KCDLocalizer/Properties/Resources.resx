@@ -130,19 +130,28 @@
   <data name="icons8-open-box-48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-open-box-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="open_mod" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\open_mod.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Caption_Select_destination_folder" xml:space="preserve">
     <value>Select destination folder</value>
   </data>
   <data name="icons8-merge-48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icons8-merge-48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="translate_ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\translate_ico.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Caption_Select_mod_folder" xml:space="preserve">
-    <value>Select mod folder</value>
+    <value>Please select root mod folder which must contain 'Data' and optional 'Localization' folders.</value>
   </data>
   <data name="Unable_to_read_mod_packages" xml:space="preserve">
     <value>Unable to read mod packages!</value>
   </data>
-  <data name="translate_ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\translate_ico.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="open-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\open-box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Caption_Add_Localization" xml:space="preserve">
+    <value>Add Localization</value>
   </data>
 </root>

@@ -79,6 +79,8 @@
     </Compile>
     <Compile Include="Localization.cs" />
     <Compile Include="LocalizationLanguage.cs" />
+    <Compile Include="ModManifest.cs" />
+    <Compile Include="NodeTag.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\EditForm.resx">
@@ -122,6 +124,8 @@
     <None Include="Resources\icons8-merge-files-48.png" />
     <None Include="Resources\icons8-merge-48.png" />
     <None Include="Resources\translate_ico.ico" />
+    <None Include="Resources\open_mod.ico" />
+    <None Include="Resources\open-box.png" />
     <Content Include="shield_security.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
