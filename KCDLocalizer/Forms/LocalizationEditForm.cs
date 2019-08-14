@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,11 +7,13 @@ namespace NSW.KCDLocalizer.Forms
 {
     public partial class LocalizationEditForm : Form
     {
+        private readonly Dictionary<string, Localization> _current;
         public Localization Current { get; }
 
-        public LocalizationEditForm(Localization localization, LocalizationLanguage language)
+        public LocalizationEditForm(Localization localization, LocalizationLanguage language, Dictionary<string, Localization> source)
         {
             InitializeComponent();
+            _current = source;
             Current = localization ?? new Localization();
             gbTranslation.Text = $" Localization {language.Name} Text ";
             UpdateControls();
@@ -48,7 +51,7 @@ namespace NSW.KCDLocalizer.Forms
         private void OnKeyTextChanged(object sender, EventArgs e)
         {
             var text = tbKey.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(text) || Localization.Current.ContainsKey(tbKey.Text))
+            if (string.IsNullOrWhiteSpace(text) || _current.ContainsKey(tbKey.Text))
             {
                 tbKey.BackColor = Color.LightSalmon;
             }

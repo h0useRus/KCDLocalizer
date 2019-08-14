@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace NSW.KCDLocalizer
@@ -26,13 +27,11 @@ namespace NSW.KCDLocalizer
 
         public override string ToString() => Key;
 
-        public static readonly Dictionary<string, Localization> Current = new Dictionary<string, Localization>(StringComparer.OrdinalIgnoreCase);
-
-        public static async Task<bool> LoadSourceLocalizationsAsync(Stream stream, bool isNew)
+        public static async Task<bool> LoadAsync(Stream stream, Dictionary<string, Localization> source, bool isNew)
         {
             try
             {
-                Current.Clear();
+                source.Clear();
                 using (var reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true }))
                 {
                     var cellIndex = 0;
@@ -68,14 +67,14 @@ namespace NSW.KCDLocalizer
                                     {
                                         case 0:
                                             cellId = value;
-                                            Current.Add(cellId, new Localization { Key = cellId });
+                                            source.Add(cellId, new Localization { Key = cellId });
                                             break;
                                         case 1:
-                                            Current[cellId].English = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            source[cellId].English = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                         case 2:
                                             if(!isNew)
-                                                Current[cellId].Translation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                                source[cellId].Translation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                     }
                                 }
@@ -87,18 +86,18 @@ namespace NSW.KCDLocalizer
             }
             catch
             {
-                Current.Clear();
+                source.Clear();
                 return false;
             }
         }
 
-        public static async Task<bool> LoadDestinationLocalizationsAsync(Stream stream)
+        public static async Task<bool> LoadSampleAsync(Stream stream, Dictionary<string, Localization> source)
         {
             try
             {
                 using (var reader = XmlReader.Create(stream, new XmlReaderSettings {Async = true}))
                 {
-                    foreach (var localization in Current)
+                    foreach (var localization in source)
                     {
                         localization.Value.SampleEnglish = null;
                         localization.Value.SampleTranslation = null;
@@ -138,20 +137,20 @@ namespace NSW.KCDLocalizer
                                     {
                                         case 0:
                                             cellId = value;
-                                            if (!Current.ContainsKey(cellId))
-                                                Current.Add(cellId, new Localization { Key = cellId });
+                                            if (!source.ContainsKey(cellId))
+                                                source.Add(cellId, new Localization { Key = cellId });
                                             break;
                                         case 1:
-                                            Current[cellId].SampleEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
-                                            if (string.IsNullOrWhiteSpace(Current[cellId].English))
-                                                Current[cellId].English =
-                                                    Current[cellId].SampleEnglish;
+                                            source[cellId].SampleEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if (string.IsNullOrWhiteSpace(source[cellId].English))
+                                                source[cellId].English =
+                                                    source[cellId].SampleEnglish;
                                             break;
                                         case 2:
-                                            Current[cellId].SampleTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
-                                            if (string.IsNullOrWhiteSpace(Current[cellId].Translation))
-                                                Current[cellId].Translation =
-                                                    Current[cellId].SampleTranslation;
+                                            source[cellId].SampleTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if (string.IsNullOrWhiteSpace(source[cellId].Translation))
+                                                source[cellId].Translation =
+                                                    source[cellId].SampleTranslation;
                                             break;
                                     }
                                 }
@@ -168,5 +167,29 @@ namespace NSW.KCDLocalizer
             }
         }
 
+        public static async Task<bool> SaveAsync(Dictionary<string, Localization> source, string fileName)
+        {
+            try
+            {
+                using (var stream = File.CreateText(fileName))
+                {
+                    await stream.WriteLineAsync("<Table>");
+                    foreach (var localization in source)
+                    {
+                        await stream.WriteLineAsync(
+                            $"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.English ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.Translation ?? string.Empty)}</Cell></Row>");
+                    }
+                    Application.DoEvents();
+                    await stream.WriteLineAsync("</Table>");
+                    await stream.FlushAsync();
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

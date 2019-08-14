@@ -107,6 +107,15 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error reading localization file {0}.
+        /// </summary>
+        internal static string Error_Error_reading_localization_file {
+            get {
+                return ResourceManager.GetString("Error_Error_reading_localization_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed on saving localization file!.
         /// </summary>
         internal static string Error_Failed_on_saving_localization_file {

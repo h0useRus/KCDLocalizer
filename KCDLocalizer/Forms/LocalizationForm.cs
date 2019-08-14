@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Windows.Forms;
 using NSW.KCDLocalizer.Properties;
 
@@ -11,16 +11,19 @@ namespace NSW.KCDLocalizer.Forms
 {
     public partial class LocalizationForm : Form
     {
-        private readonly string _sourceFileName;
         private readonly bool _isNew;
         private readonly string _originalFileName;
         private readonly LocalizationLanguage _language;
+        private readonly Dictionary<string, Localization> _current = new Dictionary<string, Localization>(StringComparer.OrdinalIgnoreCase);
+
+        public string SourceFileName { get; }
+        public bool IsChanged { get; set; }
 
         public LocalizationForm(string sourceFile, bool isNew, LocalizationLanguage language, string originalFileName)
         {
             InitializeComponent();
             gvMain.AutoGenerateColumns = false;
-            _sourceFileName = sourceFile;
+            SourceFileName = sourceFile;
             _isNew = isNew;
             _language = language;
             _originalFileName = originalFileName;
@@ -29,11 +32,10 @@ namespace NSW.KCDLocalizer.Forms
 
         private async void LoadSourceFile()
         {
-            if(!string.IsNullOrWhiteSpace(_sourceFileName))
-                using (var stream = File.OpenRead(_sourceFileName))
+            if(!string.IsNullOrWhiteSpace(SourceFileName))
+                using (var stream = File.OpenRead(SourceFileName))
                 {
-                    await Localization.LoadSourceLocalizationsAsync(stream, _isNew);
-                    UpdateStatistics();
+                    await Localization.LoadAsync(stream, _current, _isNew);
                     BindTable();
                 }
             UpdateControls();
@@ -44,29 +46,23 @@ namespace NSW.KCDLocalizer.Forms
             Text = $"{_language.Name} Localization {_originalFileName}";
             cbHideTranslated.Enabled =
                     btnAddNew.Enabled =
-                        btnSave.Enabled =
-                            tbDestinationFile.Enabled =
-                                btnOpenDestinationFile.Enabled = Localization.Current.Count > 0;
+                        tbDestinationFile.Enabled =
+                                btnOpenDestinationFile.Enabled = _current.Count > 0;
+            btnSave.Enabled = IsChanged;
         }
 
         private void BindTable()
         {
             gvMain.DataSource = null;
             gvMain.DataSource = (cbHideTranslated.Checked
-                ? Localization.Current.Values.Where(i => !i.IsTranslated)
-                : Localization.Current.Values).ToList();
+                ? _current.Values.Where(i => !i.IsTranslated)
+                : _current.Values).ToList();
             ResizeGridColumns();
         }
 
         private void ResizeGridColumns()
         {
             colEnglishSrc.Width = colTransaltionDes.Width = (gvMain.Size.Width - colKey.Width - 20) / 2;
-        }
-
-        private void UpdateStatistics()
-        {
-            lblSorceRows.Text = Localization.Current.Count.ToString();
-            lblErrorRows.Text = Localization.Current.Count(i => i.Value.IsError).ToString();
         }
 
         #region Src/Des file event handlers
@@ -86,8 +82,14 @@ namespace NSW.KCDLocalizer.Forms
                 tbDestinationFile.Text = openXmlFile.FileName;
 
                 using (var stream = File.OpenRead(fileName))
-                    await Localization.LoadDestinationLocalizationsAsync(stream);
-                UpdateStatistics();
+                    if (await Localization.LoadSampleAsync(stream, _current))
+                    {
+                        IsChanged = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, string.Format(Resources.Error_Error_reading_localization_file, _originalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
             }
 
             BindTable();
@@ -123,15 +125,14 @@ namespace NSW.KCDLocalizer.Forms
         private void GvMain_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && gvMain.Rows[e.RowIndex].DataBoundItem is Localization localization)
-            {
-                using (var form = new LocalizationEditForm(localization, _language))
+                using (var form = new LocalizationEditForm(localization, _language, _current))
                 {
-                    if (form.ShowDialog() == DialogResult.OK)
+                    if (form.ShowDialog() != DialogResult.Cancel)
                     {
-                        UpdateStatistics();
+                        IsChanged = true;
                     }
+                    UpdateControls();
                 }
-            }
         }
 
         private void GvMain_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -172,51 +173,26 @@ namespace NSW.KCDLocalizer.Forms
 
         private void BtnAddNew_Click(object sender, EventArgs e)
         {
-            using (var form = new LocalizationEditForm(new Localization(), _language))
+            using (var form = new LocalizationEditForm(new Localization(), _language, _current))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    Localization.Current.Add(form.Current.Key, form.Current);
+                    _current.Add(form.Current.Key, form.Current);
                     BindTable();
-                    UpdateStatistics();
                 }
             }
         }
 
         private async void BtnSave_Click(object sender, EventArgs e)
         {
-            mainProgress.Maximum = Localization.Current.Count;
-            mainProgress.Step = 0;
-            mainProgress.Visible = true;
-
-            try
+            if (await Localization.SaveAsync(_current, SourceFileName))
             {
-                using (var stream = File.CreateText(_sourceFileName))
-                {
-                    await stream.WriteLineAsync("<Table>");
-                    foreach (var localization in Localization.Current)
-                    {
-                        await stream.WriteLineAsync(
-                            $"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.English ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.Translation ?? string.Empty)}</Cell></Row>");
-                        mainProgress.Step++;
-                        Application.DoEvents();
-                    }
-
-                    mainProgress.Visible = false;
-                    await stream.WriteLineAsync("</Table>");
-                    await stream.FlushAsync();
-                }
+                DialogResult = DialogResult.OK;
                 Close();
-                DialogResult = DialogResult.Cancel;
             }
-            catch
+            else
             {
                 MessageBox.Show(this, Resources.Error_Failed_on_saving_localization_file, Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                mainProgress.Visible = false;
-                
             }
         }
 
