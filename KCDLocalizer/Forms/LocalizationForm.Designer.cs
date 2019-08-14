@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocalizationForm));
             this.openXmlFile = new System.Windows.Forms.OpenFileDialog();
             this.btnOpenDestinationFile = new System.Windows.Forms.Button();
             this.tbDestinationFile = new System.Windows.Forms.TextBox();
@@ -40,13 +39,13 @@
             this.mainProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.gvMain = new System.Windows.Forms.DataGridView();
-            this.colKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEnglishSrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTransaltionDes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSave = new System.Windows.Forms.Button();
             this.cbHideTranslated = new System.Windows.Forms.CheckBox();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.colKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEnglishSrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTransaltionDes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvMain)).BeginInit();
             this.SuspendLayout();
@@ -79,12 +78,6 @@
             // 
             // statusBar
             // 
-            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblSorceRows,
-            this.lblTranslated,
-            this.lblWariningRows,
-            this.lblErrorRows,
-            this.mainProgress});
             this.statusBar.Location = new System.Drawing.Point(0, 426);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(800, 24);
@@ -169,29 +162,6 @@
             this.gvMain.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GvMain_CellDoubleClick);
             this.gvMain.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GvMain_RowPrePaint);
             // 
-            // colKey
-            // 
-            this.colKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.colKey.DataPropertyName = "Key";
-            this.colKey.HeaderText = "Key";
-            this.colKey.Name = "colKey";
-            this.colKey.ReadOnly = true;
-            this.colKey.Width = 50;
-            // 
-            // colEnglishSrc
-            // 
-            this.colEnglishSrc.DataPropertyName = "OriginalEnglish";
-            this.colEnglishSrc.HeaderText = "English";
-            this.colEnglishSrc.Name = "colEnglishSrc";
-            this.colEnglishSrc.ReadOnly = true;
-            // 
-            // colTransaltionDes
-            // 
-            this.colTransaltionDes.DataPropertyName = "OriginalTranslation";
-            this.colTransaltionDes.HeaderText = "Translation";
-            this.colTransaltionDes.Name = "colTransaltionDes";
-            this.colTransaltionDes.ReadOnly = true;
-            // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -237,6 +207,29 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // colKey
+            // 
+            this.colKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.colKey.DataPropertyName = "Key";
+            this.colKey.HeaderText = "Key";
+            this.colKey.Name = "colKey";
+            this.colKey.ReadOnly = true;
+            this.colKey.Width = 50;
+            // 
+            // colEnglishSrc
+            // 
+            this.colEnglishSrc.DataPropertyName = "English";
+            this.colEnglishSrc.HeaderText = "English";
+            this.colEnglishSrc.Name = "colEnglishSrc";
+            this.colEnglishSrc.ReadOnly = true;
+            // 
+            // colTransaltionDes
+            // 
+            this.colTransaltionDes.DataPropertyName = "Translation";
+            this.colTransaltionDes.HeaderText = "Translation";
+            this.colTransaltionDes.Name = "colTransaltionDes";
+            this.colTransaltionDes.ReadOnly = true;
+            // 
             // LocalizationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,7 +246,6 @@
             this.Controls.Add(this.tbDestinationFile);
             this.Controls.Add(this.btnOpenDestinationFile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LocalizationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "LocalizationForm";
@@ -282,9 +274,9 @@
         private System.Windows.Forms.ToolStripStatusLabel lblErrorRows;
         private System.Windows.Forms.CheckBox cbHideTranslated;
         private System.Windows.Forms.Button btnAddNew;
+        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridViewTextBoxColumn colKey;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEnglishSrc;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltionDes;
-        private System.Windows.Forms.Button btnCancel;
     }
 }

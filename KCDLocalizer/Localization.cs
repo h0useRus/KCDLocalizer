@@ -10,19 +10,19 @@ namespace NSW.KCDLocalizer
     public class Localization
     {
         public string Key { get; set; }
-        public string OriginalEnglish { get; set; }
-        public string OriginalTranslation { get; set; }
-        public string DestinationEnglish { get; set; }
-        public string DestinationTranslation { get; set; }
+        public string English { get; set; }
+        public string Translation { get; set; }
+        public string SampleEnglish { get; set; }
+        public string SampleTranslation { get; set; }
 
-        public bool IsTranslated => !string.IsNullOrWhiteSpace(OriginalTranslation) && !IsError;
-        public bool IsError => string.IsNullOrWhiteSpace(OriginalEnglish);
-        public bool IsWarning => !string.IsNullOrWhiteSpace(DestinationEnglish)
-                                 && !string.IsNullOrWhiteSpace(OriginalEnglish)
-                                 && !string.IsNullOrWhiteSpace(DestinationEnglish)
-                                 && !string.Equals(OriginalEnglish, DestinationEnglish, StringComparison.Ordinal);
-        public bool IsNew => string.IsNullOrWhiteSpace(OriginalEnglish) &&
-                             !string.IsNullOrWhiteSpace(DestinationEnglish);
+        public bool IsTranslated => !string.IsNullOrWhiteSpace(Translation) && !IsError;
+        public bool IsError => string.IsNullOrWhiteSpace(English);
+        public bool IsWarning => !string.IsNullOrWhiteSpace(SampleEnglish)
+                                 && !string.IsNullOrWhiteSpace(English)
+                                 && !string.IsNullOrWhiteSpace(SampleEnglish)
+                                 && !string.Equals(English, SampleEnglish, StringComparison.Ordinal);
+        public bool IsNew => string.IsNullOrWhiteSpace(English) &&
+                             !string.IsNullOrWhiteSpace(SampleEnglish);
 
         public override string ToString() => Key;
 
@@ -71,11 +71,11 @@ namespace NSW.KCDLocalizer
                                             Current.Add(cellId, new Localization { Key = cellId });
                                             break;
                                         case 1:
-                                            Current[cellId].OriginalEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            Current[cellId].English = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                         case 2:
                                             if(!isNew)
-                                                Current[cellId].OriginalTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                                Current[cellId].Translation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
                                             break;
                                     }
                                 }
@@ -100,8 +100,8 @@ namespace NSW.KCDLocalizer
                 {
                     foreach (var localization in Current)
                     {
-                        localization.Value.DestinationEnglish = null;
-                        localization.Value.DestinationTranslation = null;
+                        localization.Value.SampleEnglish = null;
+                        localization.Value.SampleTranslation = null;
                     }
                     var cellIndex = 0;
                     var cellStarted = false;
@@ -142,13 +142,16 @@ namespace NSW.KCDLocalizer
                                                 Current.Add(cellId, new Localization { Key = cellId });
                                             break;
                                         case 1:
-                                            Current[cellId].DestinationEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            Current[cellId].SampleEnglish = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if (string.IsNullOrWhiteSpace(Current[cellId].English))
+                                                Current[cellId].English =
+                                                    Current[cellId].SampleEnglish;
                                             break;
                                         case 2:
-                                            Current[cellId].DestinationTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
-                                            if (string.IsNullOrWhiteSpace(Current[cellId].OriginalTranslation))
-                                                Current[cellId].OriginalTranslation =
-                                                    Current[cellId].DestinationTranslation;
+                                            Current[cellId].SampleTranslation = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
+                                            if (string.IsNullOrWhiteSpace(Current[cellId].Translation))
+                                                Current[cellId].Translation =
+                                                    Current[cellId].SampleTranslation;
                                             break;
                                     }
                                 }

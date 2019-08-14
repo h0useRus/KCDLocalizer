@@ -53,11 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileHelpers.cs" />
-    <Compile Include="Forms\EditForm.cs">
+    <Compile Include="Forms\LocalizationEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EditForm.Designer.cs">
-      <DependentUpon>EditForm.cs</DependentUpon>
+    <Compile Include="Forms\LocalizationEditForm.Designer.cs">
+      <DependentUpon>LocalizationEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\LocalizationForm.cs">
       <SubType>Form</SubType>
@@ -83,8 +83,8 @@
     <Compile Include="NodeTag.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\EditForm.resx">
-      <DependentUpon>EditForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LocalizationEditForm.resx">
+      <DependentUpon>LocalizationEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LocalizationForm.resx">
       <DependentUpon>LocalizationForm.cs</DependentUpon>
@@ -119,13 +119,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-open-book-24.png" />
-    <None Include="Resources\icons8-open-box-48.png" />
-    <None Include="Resources\icons8-merge-files-48.png" />
-    <None Include="Resources\icons8-merge-48.png" />
-    <None Include="Resources\translate_ico.ico" />
-    <None Include="Resources\open_mod.ico" />
     <None Include="Resources\open-box.png" />
+    <None Include="Resources\arrow_down.png" />
     <Content Include="shield_security.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

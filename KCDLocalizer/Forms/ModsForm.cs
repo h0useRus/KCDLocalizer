@@ -307,12 +307,16 @@ namespace NSW.KCDLocalizer.Forms
                             var fileLink = tag.Sources[0].Split(':');
                             var packageFile = Path.Combine(tbModFolder.Text, LocalizationFolder, fileLink[0] + ".pak");
                             var fileName = fileLink[1];
-                            if (MessageBox.Show($"Do you want open '{fileName}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show($"Do you want to open '{fileName}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 if(FileHelpers.TryExtractTemp(packageFile, fileName, out var tempFile ))
                                     using (var form = new LocalizationForm(tempFile, tag.IsNew, tag.Localization, fileName))
                                     {
-                                        form.ShowDialog(this);
+                                        if (form.ShowDialog(this) != DialogResult.Cancel)
+                                        {
+
+                                        }
+                                        File.Delete(tempFile);
                                     }
                             }
                         }

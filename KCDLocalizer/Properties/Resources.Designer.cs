@@ -61,6 +61,16 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrow_down {
+            get {
+                object obj = ResourceManager.GetObject("arrow_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Localization.
         /// </summary>
         internal static string Caption_Add_Localization {
@@ -97,42 +107,20 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to Failed on saving localization file!.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_merge_48 {
+        internal static string Error_Failed_on_saving_localization_file {
             get {
-                object obj = ResourceManager.GetObject("icons8-merge-48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Error_Failed_on_saving_localization_file", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to The localization file &apos;{0}&apos; not found!.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_merge_files_48 {
+        internal static string Error_The_localization_file_not_found {
             get {
-                object obj = ResourceManager.GetObject("icons8-merge-files-48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_open_book_24 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-open-book-24", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_open_box_48 {
-            get {
-                object obj = ResourceManager.GetObject("icons8-open-box-48", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Error_The_localization_file_not_found", resourceCulture);
             }
         }
         
@@ -142,26 +130,6 @@ namespace NSW.KCDLocalizer.Properties {
         internal static System.Drawing.Bitmap open_box {
             get {
                 object obj = ResourceManager.GetObject("open-box", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap open_mod {
-            get {
-                object obj = ResourceManager.GetObject("open_mod", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap translate_ico {
-            get {
-                object obj = ResourceManager.GetObject("translate_ico", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

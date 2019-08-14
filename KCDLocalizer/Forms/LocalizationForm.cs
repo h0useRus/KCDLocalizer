@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Windows.Forms;
+using NSW.KCDLocalizer.Properties;
 
 namespace NSW.KCDLocalizer.Forms
 {
@@ -78,7 +79,7 @@ namespace NSW.KCDLocalizer.Forms
 
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    MessageBox.Show(this, "The localization file not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, string.Format(Resources.Error_The_localization_file_not_found, _originalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -123,7 +124,7 @@ namespace NSW.KCDLocalizer.Forms
         {
             if (e.RowIndex >= 0 && gvMain.Rows[e.RowIndex].DataBoundItem is Localization localization)
             {
-                using (var form = new EditForm(localization))
+                using (var form = new LocalizationEditForm(localization, _language))
                 {
                     if (form.ShowDialog() == DialogResult.OK)
                     {
@@ -171,7 +172,7 @@ namespace NSW.KCDLocalizer.Forms
 
         private void BtnAddNew_Click(object sender, EventArgs e)
         {
-            using (var form = new EditForm(new Localization()))
+            using (var form = new LocalizationEditForm(new Localization(), _language))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -188,29 +189,35 @@ namespace NSW.KCDLocalizer.Forms
             mainProgress.Step = 0;
             mainProgress.Visible = true;
 
-            if (FileHelpers.TryCreateBackup(tbDestinationFile.Text, out _))
-                try
+            try
+            {
+                using (var stream = File.CreateText(_sourceFileName))
                 {
-                    using (var stream = File.CreateText(tbDestinationFile.Text))
+                    await stream.WriteLineAsync("<Table>");
+                    foreach (var localization in Localization.Current)
                     {
-                        await stream.WriteLineAsync("<Table>");
-                        foreach (var localization in Localization.Current)
-                        {
-                            await stream.WriteLineAsync(
-                                $"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationEnglish ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.DestinationTranslation ?? string.Empty)}</Cell></Row>");
-                            mainProgress.Step++;
-                            Application.DoEvents();
-                        }
-
-                        mainProgress.Visible = false;
-                        await stream.WriteLineAsync("</Table>");
-                        await stream.FlushAsync();
+                        await stream.WriteLineAsync(
+                            $"<Row><Cell>{localization.Key}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.English ?? string.Empty)}</Cell><Cell>{HttpUtility.HtmlEncode(localization.Value.Translation ?? string.Empty)}</Cell></Row>");
+                        mainProgress.Step++;
+                        Application.DoEvents();
                     }
-                }
-                finally
-                {
+
                     mainProgress.Visible = false;
+                    await stream.WriteLineAsync("</Table>");
+                    await stream.FlushAsync();
                 }
+                Close();
+                DialogResult = DialogResult.Cancel;
+            }
+            catch
+            {
+                MessageBox.Show(this, Resources.Error_Failed_on_saving_localization_file, Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                mainProgress.Visible = false;
+                
+            }
         }
 
         private void CbHideTranslated_CheckedChanged(object sender, EventArgs e)

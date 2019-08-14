@@ -124,9 +124,6 @@ namespace NSW.KCDLocalizer.Forms
             // 
             // gpModInfo
             // 
-            this.gpModInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.gpModInfo.Controls.Add(this.lbModInfoGameVersions);
             this.gpModInfo.Controls.Add(this.label8);
             this.gpModInfo.Controls.Add(this.label7);
@@ -351,7 +348,7 @@ namespace NSW.KCDLocalizer.Forms
             this.Controls.Add(this.statusBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ModsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ModsForm";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
