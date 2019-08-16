@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,11 +11,11 @@ namespace NSW.KCDLocalizer.Forms
     public partial class LocalizationForm : Form
     {
         private readonly bool _isNew;
-        private readonly string _originalFileName;
         private readonly LocalizationLanguage _language;
         private readonly Dictionary<string, Localization> _current = new Dictionary<string, Localization>(StringComparer.OrdinalIgnoreCase);
 
         public string SourceFileName { get; }
+        public string OriginalFileName { get; }
         public bool IsChanged { get; set; }
 
         public LocalizationForm(string sourceFile, bool isNew, LocalizationLanguage language, string originalFileName)
@@ -24,9 +23,9 @@ namespace NSW.KCDLocalizer.Forms
             InitializeComponent();
             gvMain.AutoGenerateColumns = false;
             SourceFileName = sourceFile;
+            OriginalFileName = originalFileName;
             _isNew = isNew;
             _language = language;
-            _originalFileName = originalFileName;
             LoadSourceFile();
         }
 
@@ -43,7 +42,7 @@ namespace NSW.KCDLocalizer.Forms
 
         private void UpdateControls()
         {
-            Text = $"{_language.Name} Localization {_originalFileName}";
+            Text = $"{_language.Name} localization of '{OriginalFileName}'";
             cbHideTranslated.Enabled =
                     btnAddNew.Enabled =
                         tbDestinationFile.Enabled =
@@ -71,11 +70,11 @@ namespace NSW.KCDLocalizer.Forms
         {
             if (openXmlFile.ShowDialog() == DialogResult.OK)
             {
-                var fileName = GetFile(openXmlFile.FileName, _originalFileName);
+                var fileName = GetFile(openXmlFile.FileName, OriginalFileName);
 
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    MessageBox.Show(this, string.Format(Resources.Error_The_localization_file_not_found, _originalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, string.Format(Resources.Error_The_localization_file_not_found, OriginalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -88,7 +87,7 @@ namespace NSW.KCDLocalizer.Forms
                     }
                     else
                     {
-                        MessageBox.Show(this, string.Format(Resources.Error_Error_reading_localization_file, _originalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, string.Format(Resources.Error_Error_reading_localization_file, OriginalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
             }
 
@@ -125,11 +124,12 @@ namespace NSW.KCDLocalizer.Forms
         private void GvMain_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && gvMain.Rows[e.RowIndex].DataBoundItem is Localization localization)
-                using (var form = new LocalizationEditForm(localization, _language, _current))
+                using (var form = new LocalizationEditForm(_current, localization.Key, _language))
                 {
                     if (form.ShowDialog() != DialogResult.Cancel)
                     {
-                        IsChanged = true;
+                        if(form.IsChanged)
+                            IsChanged = true;
                     }
                     UpdateControls();
                 }
@@ -173,13 +173,16 @@ namespace NSW.KCDLocalizer.Forms
 
         private void BtnAddNew_Click(object sender, EventArgs e)
         {
-            using (var form = new LocalizationEditForm(new Localization(), _language, _current))
+            using (var form = new LocalizationEditForm(_current, string.Empty, _language))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     _current.Add(form.Current.Key, form.Current);
                     BindTable();
+                    if (form.IsChanged)
+                        IsChanged = true;
                 }
+                UpdateControls();
             }
         }
 

@@ -9,17 +9,18 @@ namespace NSW.KCDLocalizer.Forms
     {
         private readonly Dictionary<string, Localization> _current;
         public Localization Current { get; }
+        public bool IsChanged { get; set; }
 
-        public LocalizationEditForm(Localization localization, LocalizationLanguage language, Dictionary<string, Localization> source)
+        public LocalizationEditForm(Dictionary<string, Localization> source, string key, LocalizationLanguage language)
         {
             InitializeComponent();
             _current = source;
-            Current = localization ?? new Localization();
+            Current = _current.TryGetValue(key, out var localization) ? localization : new Localization();
             gbTranslation.Text = $" Localization {language.Name} Text ";
-            UpdateControls();
+            InitControls();
         }
 
-        private void UpdateControls()
+        private void InitControls()
         {
             if (string.IsNullOrWhiteSpace(Current.Key))
             {
@@ -54,12 +55,16 @@ namespace NSW.KCDLocalizer.Forms
             if (string.IsNullOrWhiteSpace(text) || _current.ContainsKey(tbKey.Text))
             {
                 tbKey.BackColor = Color.LightSalmon;
+                IsChanged = false;
             }
             else
             {
                 Current.Key = text;
                 tbKey.BackColor = Color.White;
+                IsChanged = true;
             }
+
+            btnSave.Enabled = IsChanged;
         }
 
         private void OnTextBoxTextChanged(object sender, EventArgs e)
@@ -71,6 +76,11 @@ namespace NSW.KCDLocalizer.Forms
 
             if (tbSampleEnglish.Enabled && !string.Equals(tbSampleEnglish.Text, tbEnglish.Text, StringComparison.Ordinal))
                 tbSampleEnglish.BackColor = tbEnglish.BackColor = Color.LightYellow;
+
+            if (sender is TextBox tb && (tb.Name=="tbEnglish" || tb.Name=="tbTranslation"))
+                IsChanged = true;
+
+            btnSave.Enabled = IsChanged;
         }
 
         private void BtnSave_Click(object sender, EventArgs e)

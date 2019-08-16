@@ -130,7 +130,7 @@ namespace NSW.KCDLocalizer.Forms
         {
             using (var pakFile = ZipFile.OpenRead(pakFileName))
             {
-                foreach (var entry in pakFile.Entries)
+                foreach (var entry in pakFile.Entries.OrderBy(n=>n.Name))
                 {
                     var parent = rootNode;
                     if (!Path.HasExtension(entry.FullName))
@@ -241,7 +241,7 @@ namespace NSW.KCDLocalizer.Forms
                         modTree.BeginUpdate();
                         var node = _localizationNode.Nodes.Add(form.SelectedLanguage.FileName.ToLower(), form.SelectedLanguage.FileName, 1, 1);
                         node.ForeColor = Color.Blue;
-                        node.Tag = NodeTag.CreateFile(form.SelectedLanguage.FileName, form.SelectedLanguage, true);
+                        node.Tag = NodeTag.CreatePackage(Path.Combine(tbModFolder.Text, LocalizationFolder, form.SelectedLanguage.FileName), form.SelectedLanguage);
 
                         var sourceLanguage = languages.FirstOrDefault(l => l.Name == "English");
                         if (sourceLanguage == null && languages.Count > 0)
@@ -279,11 +279,11 @@ namespace NSW.KCDLocalizer.Forms
 
         private void GpModInfo_Resize(object sender, EventArgs e)
         {
-            var fullsize = (gpModInfo.Size.Width - 20) / 2;
-            lbModInfoDependencies.Width = fullsize;
+            var fullSize = (gpModInfo.Size.Width - 20) / 2;
+            lbModInfoDependencies.Width = fullSize;
             
             lbModInfoGameVersions.Location = new Point(lbModInfoDependencies.Location.X + lbModInfoDependencies.Width + 7, lbModInfoGameVersions.Location.Y);
-            lbModInfoGameVersions.Width = fullsize;
+            lbModInfoGameVersions.Width = fullSize;
 
             label8.Location = new Point(lbModInfoDependencies.Location.X + lbModInfoDependencies.Width + 7, label8.Location.Y);
         }
@@ -305,18 +305,29 @@ namespace NSW.KCDLocalizer.Forms
                         if (tag.Localization != null)
                         {
                             var fileLink = tag.Sources[0].Split(':');
+                            if(fileLink.Length!=2) return;
                             var packageFile = Path.Combine(tbModFolder.Text, LocalizationFolder, fileLink[0] + ".pak");
-                            var fileName = fileLink[1];
-                            if (MessageBox.Show($"Do you want edit '{fileName}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            var fileEntry = fileLink[1];
+                            if (MessageBox.Show($"Do you want edit '{fileEntry}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
-                                if(FileHelpers.TryExtractTemp(packageFile, fileName, out var tempFile ))
-                                    using (var form = new LocalizationForm(tempFile, tag.IsNew, tag.Localization, fileName))
+                                if (FileHelpers.TryExtractTemp(packageFile, fileEntry, out var tempFile))
+                                    using (var form = new LocalizationForm(tempFile, tag.IsNew, tag.Localization, fileEntry))
                                     {
                                         if (form.ShowDialog(this) == DialogResult.OK)
                                         {
-                                            MessageBox.Show(form.SourceFileName);
+                                            if (PackLocalization(form.SourceFileName, fileEntry, tag.Localization.FileName, out var pakFilePath))
+                                            {
+                                                selectedNode.ForeColor = modTree.ForeColor;
+                                                selectedNode.Tag = NodeTag.CreateFile(string.Join(":", Path.GetFileNameWithoutExtension(tag.Localization.FileName), fileEntry), tag.Localization, false);
+                                                selectedNode.Parent.ForeColor = modTree.ForeColor;
+                                            }
+                                            else
+                                            {
+                                                MessageBox.Show(this, $"Can't place '{fileEntry}' into '{tag.Localization.FileName}'!", Resources.Caption_Error,
+                                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            }
                                         }
-                                        File.Delete(tempFile);
+                                        File.Delete(form.SourceFileName);
                                     }
                             }
                         }
@@ -324,6 +335,36 @@ namespace NSW.KCDLocalizer.Forms
                     default:
                         return;
                 }
+            }
+        }
+
+        private bool PackLocalization(string sourceFileName, string fileEntry, string pakFileName, out string pakFilePath)
+        {
+            try
+            {
+                pakFilePath = Path.Combine(tbModFolder.Text, LocalizationFolder, pakFileName);
+                var exists = File.Exists(pakFilePath);
+
+                if (exists)
+                    FileHelpers.TryCreateBackup(pakFilePath, false, out _);
+
+                using (var pakFile = ZipFile.Open(pakFilePath, exists ? ZipArchiveMode.Update : ZipArchiveMode.Create))
+                {
+                    try
+                    {
+                        var entry = pakFile.GetEntry(fileEntry);
+                        entry?.Delete();
+                    } 
+                    catch{}
+                    pakFile.CreateEntryFromFile(sourceFileName, fileEntry);
+                }
+
+                return true;
+            }
+            catch
+            {
+                pakFilePath = null;
+                return false;
             }
         }
     }

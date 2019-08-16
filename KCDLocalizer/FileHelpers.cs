@@ -6,12 +6,15 @@ namespace NSW.KCDLocalizer
 {
     public static class FileHelpers
     {
-        public static bool TryCreateBackup(string originalFileName, out string backupFileName)
+        public static bool TryCreateBackup(string originalFileName, bool move, out string backupFileName)
         {
             backupFileName = $"{Path.GetDirectoryName(originalFileName)}\\{Path.GetFileNameWithoutExtension(originalFileName)}_{DateTime.UtcNow.Ticks}.bak";
             try
             {
-                File.Move(originalFileName, backupFileName);
+                if(move)
+                    File.Move(originalFileName, backupFileName);
+                else
+                    File.Copy(originalFileName, backupFileName);
                 return true;
             }
             catch
