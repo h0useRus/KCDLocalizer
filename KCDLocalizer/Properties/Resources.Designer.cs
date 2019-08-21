@@ -144,11 +144,38 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Package file is not selected!.
+        /// </summary>
+        internal static string Package_file_is_not_selected {
+            get {
+                return ResourceManager.GetString("Package_file_is_not_selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} localization of &apos;{1}&apos;.
+        /// </summary>
+        internal static string Title_LocalizationForm {
+            get {
+                return ResourceManager.GetString("Title_LocalizationForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to read mod packages!.
         /// </summary>
         internal static string Unable_to_read_mod_packages {
             get {
                 return ResourceManager.GetString("Unable_to_read_mod_packages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zero resources selected!.
+        /// </summary>
+        internal static string Zero_resources_selected_ {
+            get {
+                return ResourceManager.GetString("Zero_resources_selected_", resourceCulture);
             }
         }
     }

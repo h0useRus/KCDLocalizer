@@ -53,6 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileHelpers.cs" />
+    <Compile Include="Forms\LocalizationCreateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LocalizationCreateForm.Designer.cs">
+      <DependentUpon>LocalizationCreateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LocalizationEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,18 +77,22 @@
     <Compile Include="Forms\ModsForm.Designer.cs">
       <DependentUpon>ModsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SelectLanguageForm.cs">
+    <Compile Include="Forms\LocalizationAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SelectLanguageForm.Designer.cs">
-      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    <Compile Include="Forms\LocalizationAddForm.Designer.cs">
+      <DependentUpon>LocalizationAddForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Results\LocalizationAddResult.cs" />
     <Compile Include="Localization.cs" />
-    <Compile Include="LocalizationLanguage.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="ModManifest.cs" />
     <Compile Include="NodeTag.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\LocalizationCreateForm.resx">
+      <DependentUpon>LocalizationCreateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LocalizationEditForm.resx">
       <DependentUpon>LocalizationEditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -92,8 +102,8 @@
     <EmbeddedResource Include="Forms\ModsForm.resx">
       <DependentUpon>ModsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SelectLanguageForm.resx">
-      <DependentUpon>SelectLanguageForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LocalizationAddForm.resx">
+      <DependentUpon>LocalizationAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

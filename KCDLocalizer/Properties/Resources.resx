@@ -148,4 +148,13 @@
   <data name="Error_Error_reading_localization_file" xml:space="preserve">
     <value>Error reading localization file {0}</value>
   </data>
+  <data name="Title_LocalizationForm" xml:space="preserve">
+    <value>{0} localization of '{1}'</value>
+  </data>
+  <data name="Package_file_is_not_selected" xml:space="preserve">
+    <value>Package file is not selected!</value>
+  </data>
+  <data name="Zero_resources_selected_" xml:space="preserve">
+    <value>Zero resources selected!</value>
+  </data>
 </root>

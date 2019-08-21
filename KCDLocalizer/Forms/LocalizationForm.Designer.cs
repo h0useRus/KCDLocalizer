@@ -34,12 +34,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.gvMain = new System.Windows.Forms.DataGridView();
             this.colKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEnglishSrc = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTransaltionDes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEnglish = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTransaltion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSave = new System.Windows.Forms.Button();
             this.cbHideTranslated = new System.Windows.Forms.CheckBox();
             this.btnAddNew = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.cbAutoTranslate = new System.Windows.Forms.CheckBox();
+            this.cbAddMissedKeys = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.gvMain)).BeginInit();
             this.SuspendLayout();
             // 
@@ -92,15 +94,15 @@
             this.gvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvMain.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colKey,
-            this.colEnglishSrc,
-            this.colTransaltionDes});
-            this.gvMain.Location = new System.Drawing.Point(15, 32);
+            this.colEnglish,
+            this.colTransaltion});
+            this.gvMain.Location = new System.Drawing.Point(15, 57);
             this.gvMain.MultiSelect = false;
             this.gvMain.Name = "gvMain";
             this.gvMain.ReadOnly = true;
             this.gvMain.RowHeadersVisible = false;
             this.gvMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gvMain.Size = new System.Drawing.Size(773, 375);
+            this.gvMain.Size = new System.Drawing.Size(773, 350);
             this.gvMain.TabIndex = 7;
             this.gvMain.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GvMain_CellDoubleClick);
             this.gvMain.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GvMain_RowPrePaint);
@@ -114,19 +116,19 @@
             this.colKey.ReadOnly = true;
             this.colKey.Width = 50;
             // 
-            // colEnglishSrc
+            // colEnglish
             // 
-            this.colEnglishSrc.DataPropertyName = "English";
-            this.colEnglishSrc.HeaderText = "English";
-            this.colEnglishSrc.Name = "colEnglishSrc";
-            this.colEnglishSrc.ReadOnly = true;
+            this.colEnglish.DataPropertyName = "English";
+            this.colEnglish.HeaderText = "English";
+            this.colEnglish.Name = "colEnglish";
+            this.colEnglish.ReadOnly = true;
             // 
-            // colTransaltionDes
+            // colTransaltion
             // 
-            this.colTransaltionDes.DataPropertyName = "Translation";
-            this.colTransaltionDes.HeaderText = "Translation";
-            this.colTransaltionDes.Name = "colTransaltionDes";
-            this.colTransaltionDes.ReadOnly = true;
+            this.colTransaltion.DataPropertyName = "Translation";
+            this.colTransaltion.HeaderText = "Translation";
+            this.colTransaltion.Name = "colTransaltion";
+            this.colTransaltion.ReadOnly = true;
             // 
             // btnSave
             // 
@@ -145,9 +147,9 @@
             this.cbHideTranslated.AutoSize = true;
             this.cbHideTranslated.Location = new System.Drawing.Point(15, 417);
             this.cbHideTranslated.Name = "cbHideTranslated";
-            this.cbHideTranslated.Size = new System.Drawing.Size(96, 17);
+            this.cbHideTranslated.Size = new System.Drawing.Size(97, 17);
             this.cbHideTranslated.TabIndex = 11;
-            this.cbHideTranslated.Text = "Hide Localized";
+            this.cbHideTranslated.Text = "Hide translated";
             this.cbHideTranslated.UseVisualStyleBackColor = true;
             this.cbHideTranslated.CheckedChanged += new System.EventHandler(this.CbHideTranslated_CheckedChanged);
             // 
@@ -173,12 +175,40 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // cbAutoTranslate
+            // 
+            this.cbAutoTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbAutoTranslate.AutoSize = true;
+            this.cbAutoTranslate.Checked = true;
+            this.cbAutoTranslate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbAutoTranslate.Location = new System.Drawing.Point(15, 34);
+            this.cbAutoTranslate.Name = "cbAutoTranslate";
+            this.cbAutoTranslate.Size = new System.Drawing.Size(91, 17);
+            this.cbAutoTranslate.TabIndex = 14;
+            this.cbAutoTranslate.Text = "Auto-translate";
+            this.cbAutoTranslate.UseVisualStyleBackColor = true;
+            // 
+            // cbAddMissedKeys
+            // 
+            this.cbAddMissedKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbAddMissedKeys.AutoSize = true;
+            this.cbAddMissedKeys.Checked = true;
+            this.cbAddMissedKeys.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbAddMissedKeys.Location = new System.Drawing.Point(112, 34);
+            this.cbAddMissedKeys.Name = "cbAddMissedKeys";
+            this.cbAddMissedKeys.Size = new System.Drawing.Size(105, 17);
+            this.cbAddMissedKeys.TabIndex = 15;
+            this.cbAddMissedKeys.Text = "Add missed keys";
+            this.cbAddMissedKeys.UseVisualStyleBackColor = true;
+            // 
             // LocalizationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(800, 448);
+            this.Controls.Add(this.cbAddMissedKeys);
+            this.Controls.Add(this.cbAutoTranslate);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAddNew);
             this.Controls.Add(this.cbHideTranslated);
@@ -210,7 +240,9 @@
         private System.Windows.Forms.Button btnAddNew;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridViewTextBoxColumn colKey;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colEnglishSrc;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltionDes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEnglish;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltion;
+        private System.Windows.Forms.CheckBox cbAutoTranslate;
+        private System.Windows.Forms.CheckBox cbAddMissedKeys;
     }
 }

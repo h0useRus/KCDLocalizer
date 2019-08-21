@@ -15,21 +15,21 @@ namespace NSW.KCDLocalizer
         public bool IsNew { get; set; }
         public NodeType Type { get; set; }
         public List<string> Sources { get; } = new List<string>();
-        public LocalizationLanguage Localization { get; set; }
+        public Language Language { get; set; }
 
         public static NodeTag Root => new NodeTag { Type = NodeType.Root };
         public static NodeTag Folder => new NodeTag { Type = NodeType.Folder };
 
-        public static NodeTag CreatePackage(string fileName, LocalizationLanguage localization)
+        public static NodeTag CreatePackage(string fileName, Language language)
         {
-            var tag = new NodeTag { Type = NodeType.Package, Localization = localization};
+            var tag = new NodeTag { Type = NodeType.Package, Language = language};
             tag.Sources.Add(fileName);
             return tag;
         }
 
-        public static NodeTag CreateFile(string fileName, LocalizationLanguage localization, bool isNew)
+        public static NodeTag CreateFile(string fileName, Language language, bool isNew)
         {
-            var tag = new NodeTag { Type = NodeType.File, Localization = localization, IsNew = isNew};
+            var tag = new NodeTag { Type = NodeType.File, Language = language, IsNew = isNew};
             tag.Sources.Add(fileName);
             return tag;
         }

@@ -93,24 +93,13 @@ namespace NSW.KCDLocalizer.Forms
                     var files = Directory.GetFiles(structureFolder, "*.pak");
                     foreach (var fileName in files)
                     {
-                        var key = Path.GetFileName(fileName).ToLower();
                         var root = structureNode;
-                        var currentLocalization = LocalizationLanguage.Supported.FirstOrDefault(l => string.Equals(key, l.FileName, StringComparison.OrdinalIgnoreCase));
+                        Language language = null;
                         if (addFileNode)
                         {
-                            if (structureNode.Nodes.ContainsKey(key))
-                            {
-                                root = structureNode.Nodes[key];
-                            }
-                            else
-                            {
-                                root = structureNode.Nodes.Add(key, Path.GetFileName(fileName), 1, 1);
-                                root.Tag = NodeTag.CreatePackage(fileName, currentLocalization);
-                                if (checkConflicts)
-                                    root.ForeColor = Color.Green;
-                            }
+                            root = CreateFileNode(structureNode, fileName, checkConflicts, out language);
                         }
-                        ReadPackage(fileName, root, currentLocalization, checkConflicts);
+                        ReadPackage(fileName, root, language, checkConflicts);
                     }
                 }
                 structureNode.Expand();
@@ -126,7 +115,27 @@ namespace NSW.KCDLocalizer.Forms
             }
         }
 
-        private void ReadPackage(string pakFileName, TreeNode rootNode, LocalizationLanguage localization, bool checkConflicts)
+        private static TreeNode CreateFileNode(TreeNode parentNode, string fileName, bool checkConflicts, out Language language)
+        {
+            var key = Path.GetFileName(fileName).ToLower();
+            language = Language.Supported.FirstOrDefault(l => string.Equals(key, l.FileName, StringComparison.OrdinalIgnoreCase));
+            TreeNode root;
+            if (parentNode.Nodes.ContainsKey(key))
+            {
+                root = parentNode.Nodes[key];
+            }
+            else
+            {
+                root = parentNode.Nodes.Add(key, Path.GetFileName(fileName), 1, 1);
+                root.Tag = NodeTag.CreatePackage(fileName, language);
+                if (checkConflicts)
+                    root.ForeColor = Color.Green;
+            }
+
+            return root;
+        }
+
+        private void ReadPackage(string pakFileName, TreeNode rootNode, Language localization, bool checkConflicts)
         {
             using (var pakFile = ZipFile.OpenRead(pakFileName))
             {
@@ -224,57 +233,36 @@ namespace NSW.KCDLocalizer.Forms
 
         private void CmsLocalizationAddLanguage_Click(object sender, EventArgs e)
         {
-            var languages = new List<LocalizationLanguage>();
+            var languages = new List<Language>();
             foreach (TreeNode node in _localizationNode.Nodes)
             {
-                if(node.Tag is NodeTag tag && tag.Localization != null)
-                    languages.Add(tag.Localization);
+                if(node.Tag is NodeTag tag && tag.Language != null)
+                    languages.Add(tag.Language);
             }
 
-            using (var form = new SelectLanguageForm(languages))
-            {
-                form.Text = Resources.Caption_Add_Localization;
-                if (form.ShowDialog() == DialogResult.OK)
+            if (languages.Count < Language.Supported.Length)
+                using (var form = new LocalizationAddForm(languages))
                 {
-                    if (form.SelectedLanguage != null)
+                    if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        modTree.BeginUpdate();
-                        var node = _localizationNode.Nodes.Add(form.SelectedLanguage.FileName.ToLower(), form.SelectedLanguage.FileName, 1, 1);
-                        node.ForeColor = Color.Blue;
-                        node.Tag = NodeTag.CreatePackage(Path.Combine(tbModFolder.Text, LocalizationFolder, form.SelectedLanguage.FileName), form.SelectedLanguage);
+                        if (form.Result.IsLocal)
+                        {
+                            form.Result.PackageFileName = Path.Combine(tbModFolder.Text, LocalizationFolder, form.Result.PackageFileName);
+                        }
 
-                        var sourceLanguage = languages.FirstOrDefault(l => l.Name == "English");
-                        if (sourceLanguage == null && languages.Count > 0)
-                            sourceLanguage = languages[0];
-
-                        var sourceNode = FindLanguageNode(sourceLanguage);
-                        if (sourceNode != null)
-                            foreach (TreeNode sourceFileNode in sourceNode.Nodes)
+                        using (var dlg = new LocalizationCreateForm(form.Result, Path.Combine(tbModFolder.Text, LocalizationFolder)))
+                        {
+                            dlg.ShowDialog(this);
+                            if (dlg.DialogResult == DialogResult.OK)
                             {
-                                var fileNode = node.Nodes.Add(sourceFileNode.Name, sourceFileNode.Text, sourceFileNode.ImageIndex, sourceFileNode.SelectedImageIndex);
-                                if (sourceFileNode.Tag is NodeTag tag)
-                                {
-                                    fileNode.Tag = NodeTag.CreateFile(tag.Sources[0], form.SelectedLanguage, true);
-                                }
-                                fileNode.ForeColor = Color.Blue;
+                                modTree.BeginUpdate();
+                                var node = CreateFileNode(_localizationNode, dlg.PakFileName, false, out var language);
+                                ReadPackage(dlg.PakFileName, node, language, false);
+                                modTree.EndUpdate();
                             }
-                        modTree.EndUpdate();
-                        ExpandFullNode(node);
+                        }
                     }
                 }
-            }
-        }
-
-        private TreeNode FindLanguageNode(LocalizationLanguage findLanguage)
-        {
-            if(findLanguage!=null)
-                foreach (TreeNode node in _localizationNode.Nodes)
-                {
-                    if(node.Tag is NodeTag tag && tag.Localization != null)
-                        if (tag.Localization.Name == findLanguage.Name)
-                            return node;
-                }
-            return null;
         }
 
         private void GpModInfo_Resize(object sender, EventArgs e)
@@ -288,7 +276,7 @@ namespace NSW.KCDLocalizer.Forms
             label8.Location = new Point(lbModInfoDependencies.Location.X + lbModInfoDependencies.Width + 7, label8.Location.Y);
         }
 
-        private void ModTree_DoubleClick(object sender, EventArgs e)
+        private async void ModTree_DoubleClick(object sender, EventArgs e)
         {
             var selectedNode = modTree.SelectedNode;
             if (selectedNode?.Tag is NodeTag tag)
@@ -302,28 +290,29 @@ namespace NSW.KCDLocalizer.Forms
                     case NodeType.Folder:
                         break;
                     case NodeType.File:
-                        if (tag.Localization != null)
+                        if (tag.Language != null)
                         {
                             var fileLink = tag.Sources[0].Split(':');
                             if(fileLink.Length!=2) return;
                             var packageFile = Path.Combine(tbModFolder.Text, LocalizationFolder, fileLink[0] + ".pak");
                             var fileEntry = fileLink[1];
-                            if (MessageBox.Show($"Do you want edit '{fileEntry}'?", $"{tag.Localization.Name} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show($"Do you want edit '{fileEntry}' file?", $"{tag.Language} Localization", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 if (FileHelpers.TryExtractTemp(packageFile, fileEntry, out var tempFile))
-                                    using (var form = new LocalizationForm(tempFile, tag.IsNew, tag.Localization, fileEntry))
+                                    using (var form = new LocalizationForm(tag.Language, fileEntry))
                                     {
+                                        await form.LoadAsync(tempFile, tag.IsNew);
                                         if (form.ShowDialog(this) == DialogResult.OK)
                                         {
-                                            if (PackLocalization(form.SourceFileName, fileEntry, tag.Localization.FileName, out var pakFilePath))
+                                            if (PackLocalization(form.SourceFileName, fileEntry, tag.Language.FileName, out var pakFilePath))
                                             {
                                                 selectedNode.ForeColor = modTree.ForeColor;
-                                                selectedNode.Tag = NodeTag.CreateFile(string.Join(":", Path.GetFileNameWithoutExtension(tag.Localization.FileName), fileEntry), tag.Localization, false);
+                                                selectedNode.Tag = NodeTag.CreateFile(string.Join(":", Path.GetFileNameWithoutExtension(tag.Language.FileName), fileEntry), tag.Language, false);
                                                 selectedNode.Parent.ForeColor = modTree.ForeColor;
                                             }
                                             else
                                             {
-                                                MessageBox.Show(this, $"Can't place '{fileEntry}' into '{tag.Localization.FileName}'!", Resources.Caption_Error,
+                                                MessageBox.Show(this, $"Can't place '{fileEntry}' into '{tag.Language.FileName}'!", Resources.Caption_Error,
                                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                                             }
                                         }
