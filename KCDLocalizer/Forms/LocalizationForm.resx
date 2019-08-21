@@ -117,44 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Caption_Error" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="Error_The_localization_file_not_found" xml:space="preserve">
-    <value>The localization file '{0}' not found!</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="open-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\open-box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Caption_Select_destination_folder" xml:space="preserve">
-    <value>Select destination folder</value>
-  </data>
-  <data name="Caption_Add_Localization" xml:space="preserve">
-    <value>Add Localization</value>
-  </data>
-  <data name="Caption_Select_mod_folder" xml:space="preserve">
-    <value>Please select root mod folder which must contain 'Data' and optional 'Localization' folders.</value>
-  </data>
-  <data name="Error_Failed_on_saving_localization_file" xml:space="preserve">
-    <value>Failed on saving localization file!</value>
-  </data>
-  <data name="Unable_to_read_mod_packages" xml:space="preserve">
-    <value>Unable to read mod packages!</value>
-  </data>
-  <data name="arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Error_Error_reading_localization_file" xml:space="preserve">
-    <value>Error reading localization file {0}</value>
-  </data>
-  <data name="Title_LocalizationForm" xml:space="preserve">
-    <value>{0} localization of '{1}'</value>
-  </data>
-  <data name="Package_file_is_not_selected" xml:space="preserve">
-    <value>Package file is not selected!</value>
-  </data>
-  <data name="Zero_resources_selected_" xml:space="preserve">
-    <value>Zero resources selected!</value>
-  </data>
+  <metadata name="openXmlFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="colKey.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colEnglish.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="colTransaltion.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

@@ -59,5 +59,124 @@ namespace NSW.KCDLocalizer.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrow_down {
+            get {
+                object obj = ResourceManager.GetObject("arrow_down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Localization.
+        /// </summary>
+        internal static string Caption_Add_Localization {
+            get {
+                return ResourceManager.GetString("Caption_Add_Localization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Caption_Error {
+            get {
+                return ResourceManager.GetString("Caption_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select destination folder.
+        /// </summary>
+        internal static string Caption_Select_destination_folder {
+            get {
+                return ResourceManager.GetString("Caption_Select_destination_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select root mod folder which must contain &apos;Data&apos; and optional &apos;Localization&apos; folders..
+        /// </summary>
+        internal static string Caption_Select_mod_folder {
+            get {
+                return ResourceManager.GetString("Caption_Select_mod_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading localization file {0}.
+        /// </summary>
+        internal static string Error_Error_reading_localization_file {
+            get {
+                return ResourceManager.GetString("Error_Error_reading_localization_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed on saving localization file!.
+        /// </summary>
+        internal static string Error_Failed_on_saving_localization_file {
+            get {
+                return ResourceManager.GetString("Error_Failed_on_saving_localization_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The localization file &apos;{0}&apos; not found!.
+        /// </summary>
+        internal static string Error_The_localization_file_not_found {
+            get {
+                return ResourceManager.GetString("Error_The_localization_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap open_box {
+            get {
+                object obj = ResourceManager.GetObject("open-box", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package file is not selected!.
+        /// </summary>
+        internal static string Package_file_is_not_selected {
+            get {
+                return ResourceManager.GetString("Package_file_is_not_selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} localization of &apos;{1}&apos;.
+        /// </summary>
+        internal static string Title_LocalizationForm {
+            get {
+                return ResourceManager.GetString("Title_LocalizationForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read mod packages!.
+        /// </summary>
+        internal static string Unable_to_read_mod_packages {
+            get {
+                return ResourceManager.GetString("Unable_to_read_mod_packages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zero resources selected!.
+        /// </summary>
+        internal static string Zero_resources_selected_ {
+            get {
+                return ResourceManager.GetString("Zero_resources_selected_", resourceCulture);
+            }
+        }
     }
 }

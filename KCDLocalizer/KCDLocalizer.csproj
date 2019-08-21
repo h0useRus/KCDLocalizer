@@ -38,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,26 +52,58 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\EditForm.cs">
+    <Compile Include="FileHelpers.cs" />
+    <Compile Include="Forms\LocalizationCreateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EditForm.Designer.cs">
-      <DependentUpon>EditForm.cs</DependentUpon>
+    <Compile Include="Forms\LocalizationCreateForm.Designer.cs">
+      <DependentUpon>LocalizationCreateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainForm.cs">
+    <Compile Include="Forms\LocalizationEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Forms\LocalizationEditForm.Designer.cs">
+      <DependentUpon>LocalizationEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LocalizationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LocalizationForm.Designer.cs">
+      <DependentUpon>LocalizationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ModsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ModsForm.Designer.cs">
+      <DependentUpon>ModsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LocalizationAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LocalizationAddForm.Designer.cs">
+      <DependentUpon>LocalizationAddForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Results\LocalizationAddResult.cs" />
     <Compile Include="Localization.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="ModManifest.cs" />
+    <Compile Include="NodeTag.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\EditForm.resx">
-      <DependentUpon>EditForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LocalizationCreateForm.resx">
+      <DependentUpon>LocalizationCreateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LocalizationEditForm.resx">
+      <DependentUpon>LocalizationEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LocalizationForm.resx">
+      <DependentUpon>LocalizationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModsForm.resx">
+      <DependentUpon>ModsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LocalizationAddForm.resx">
+      <DependentUpon>LocalizationAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -95,6 +129,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\open-box.png" />
+    <None Include="Resources\arrow_down.png" />
     <Content Include="shield_security.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
