@@ -86,6 +86,7 @@
     <Compile Include="Forms\Results\LocalizationAddResult.cs" />
     <Compile Include="Localization.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="ModManifest.cs" />
     <Compile Include="NodeTag.cs" />
     <Compile Include="Program.cs" />

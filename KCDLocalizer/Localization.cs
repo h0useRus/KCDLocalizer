@@ -35,22 +35,24 @@ namespace NSW.KCDLocalizer
             return sb.ToString();
         }
 
-        public static async Task<Dictionary<string, Localization>> LoadAsync(string fileName, bool ignoreTranslation = false)
+        public static async Task<Dictionary<string, Localization>> LoadAsync(string fileName, bool ignoreTranslation = false, bool overrideDuplicated = false)
         {
             try
             {
                 using (var stream = File.OpenRead(fileName))
                 {
-                    return await LoadAsync(stream, ignoreTranslation);
+                    Log.LogInfo("File", $"Load localization from {fileName}");
+                    return await LoadAsync(stream, ignoreTranslation, overrideDuplicated);
                 }
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 return null;
             }
         }
 
-        public static async Task<Dictionary<string, Localization>> LoadAsync(Stream stream, bool ignoreTranslation = false)
+        public static async Task<Dictionary<string, Localization>> LoadAsync(Stream stream, bool ignoreTranslation = false, bool overrideDuplicated = false)
         {
             try
             {
@@ -90,7 +92,16 @@ namespace NSW.KCDLocalizer
                                     {
                                         case 0:
                                             cellId = value;
-                                            result.Add(cellId, new Localization(cellId));
+                                            if (result.ContainsKey(cellId))
+                                            {
+                                                Log.LogInfo("Key Duplication", cellId);
+                                                if (!overrideDuplicated)
+                                                {
+                                                    cellId += "_duplicate";
+                                                }
+                                                
+                                            }
+                                            result[cellId] = new Localization(cellId);
                                             break;
                                         case 1:
                                             result[cellId].English = string.IsNullOrEmpty(value) ? string.Empty : HttpUtility.HtmlDecode(value);
@@ -107,8 +118,9 @@ namespace NSW.KCDLocalizer
                 }
                 return result;
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 return null;
             }
         }

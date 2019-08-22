@@ -23,8 +23,9 @@ namespace NSW.KCDLocalizer
                     File.Copy(originalFileName, backupFileName);
                 return true;
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 return false;
             }
         }
@@ -46,8 +47,9 @@ namespace NSW.KCDLocalizer
                 }
                 return !string.IsNullOrWhiteSpace(outputFileName);
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 return false;
             }
         }
@@ -70,8 +72,9 @@ namespace NSW.KCDLocalizer
 
                 return content.Count > 0;
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 return false;
             }
         }
