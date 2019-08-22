@@ -35,7 +35,7 @@ namespace NSW.KCDLocalizer
             return sb.ToString();
         }
 
-        public static async Task<Dictionary<string, Localization>> LoadAsync(string fileName, bool ignoreTranslation = false, bool overrideDuplicated = false)
+        public static async Task<Dictionary<string, Localization>> LoadAsync(string fileName, bool ignoreTranslation = false, bool overrideDuplicated = true)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace NSW.KCDLocalizer
             }
         }
 
-        public static async Task<Dictionary<string, Localization>> LoadAsync(Stream stream, bool ignoreTranslation = false, bool overrideDuplicated = false)
+        public static async Task<Dictionary<string, Localization>> LoadAsync(Stream stream, bool ignoreTranslation = false, bool overrideDuplicated = true)
         {
             try
             {
