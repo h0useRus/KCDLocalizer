@@ -63,8 +63,9 @@ namespace NSW.KCDLocalizer.Forms
 
                 DialogResult = DialogResult.OK;
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 MessageBox.Show(this, $"Cann't create package {_result.Language.FileName}!", Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }

@@ -33,13 +33,10 @@ namespace NSW.KCDLocalizer.Forms
             if (!string.IsNullOrWhiteSpace(sourceFileName))
             {
                 SourceFileName = sourceFileName;
-                using (var stream = File.OpenRead(SourceFileName))
-                {
-                    _current = await Localization.LoadAsync(stream, isNew);
-                    BindTable();
-                }
+                _current = await Localization.LoadAsync(sourceFileName, isNew);
+                BindTable();
             }
-            
+
             UpdateControls();
         }
 
@@ -80,45 +77,40 @@ namespace NSW.KCDLocalizer.Forms
                     MessageBox.Show(this, string.Format(Resources.Error_The_localization_file_not_found, OriginalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
-
-                using (var stream = File.OpenRead(fileName))
+                
+                _sample = await Localization.LoadAsync(fileName);
+                if (_sample != null)
                 {
-                    _sample = await Localization.LoadAsync(stream);
-                    if (_sample!=null)
+                    tbDestinationFile.Text = openXmlFile.FileName;
+
+                    foreach (var localization in _sample)
                     {
-                        tbDestinationFile.Text = openXmlFile.FileName;
-
-                        foreach (var localization in _sample)
+                        if (!_current.ContainsKey(localization.Key) && cbAddMissedKeys.Checked)
                         {
-                            if (!_current.ContainsKey(localization.Key) && cbAddMissedKeys.Checked)
-                            {
-                                _current.Add(localization.Key, localization.Value);
-                                IsChanged = true;
-                            }
-
-                            if (_current.ContainsKey(localization.Key)
-                                && string.IsNullOrEmpty(_current[localization.Key].Translation)
-                                && !string.IsNullOrEmpty(localization.Value.Translation)
-                                && cbAutoTranslate.Checked)
-                            {
-                                if (!string.IsNullOrWhiteSpace(localization.Value.English)
-                                    && string.IsNullOrWhiteSpace(_current[localization.Key].English))
-                                    _current[localization.Key].English = localization.Value.English;
-
-                                _current[localization.Key].Translation = localization.Value.Translation;
-                                IsChanged = true;
-                            }
+                            _current.Add(localization.Key, localization.Value);
+                            IsChanged = true;
                         }
 
-                        BindTable();
-                        UpdateControls();
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, string.Format(Resources.Error_Error_reading_localization_file, OriginalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (_current.ContainsKey(localization.Key)
+                            && string.IsNullOrEmpty(_current[localization.Key].Translation)
+                            && !string.IsNullOrEmpty(localization.Value.Translation)
+                            && cbAutoTranslate.Checked)
+                        {
+                            if (!string.IsNullOrWhiteSpace(localization.Value.English)
+                                && string.IsNullOrWhiteSpace(_current[localization.Key].English))
+                                _current[localization.Key].English = localization.Value.English;
+
+                            _current[localization.Key].Translation = localization.Value.Translation;
+                            IsChanged = true;
+                        }
                     }
 
+                    BindTable();
+                    UpdateControls();
+                }
+                else
+                {
+                    MessageBox.Show(this, string.Format(Resources.Error_Error_reading_localization_file, OriginalFileName), Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -126,12 +118,12 @@ namespace NSW.KCDLocalizer.Forms
         private string GetFile(string fileName, string originalFileName)
         {
             var extension = Path.GetExtension(fileName);
-            if(string.Equals(extension,".xml", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
             {
                 return fileName;
             }
 
-            if(string.Equals(extension,".pak", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(extension, ".pak", StringComparison.OrdinalIgnoreCase))
             {
                 if (FileHelpers.TryExtractTemp(fileName, originalFileName, out var tempFileName))
                 {
@@ -153,7 +145,7 @@ namespace NSW.KCDLocalizer.Forms
         {
             if (e.RowIndex >= 0 && gvMain.Rows[e.RowIndex].DataBoundItem is Localization localization)
             {
-                var source = _sample!=null && _sample.TryGetValue(localization.Key, out var sample) ? sample : null;
+                var source = _sample != null && _sample.TryGetValue(localization.Key, out var sample) ? sample : null;
                 using (var form = new LocalizationEditForm(localization, source, Language))
                 {
                     if (form.ShowDialog() != DialogResult.Cancel)
@@ -229,6 +221,18 @@ namespace NSW.KCDLocalizer.Forms
         private void CbHideTranslated_CheckedChanged(object sender, EventArgs e)
         {
             BindTable();
+        }
+
+        private void BtnDeleteKey_Click(object sender, EventArgs e)
+        {
+            var selected = gvMain.SelectedRows[0];
+            if (selected.DataBoundItem is Localization localization)
+            {
+                _current.Remove(localization.Key);
+                BindTable();
+                IsChanged = true;
+            }
+            UpdateControls();
         }
     }
 }

@@ -13,10 +13,22 @@ namespace NSW.KCDLocalizer
         [STAThread]
         static void Main()
         {
-            var title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ModsForm(title));
+            try
+            {
+                Log.Start();
+                var title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new ModsForm(title));
+            }
+            catch (Exception exception)
+            {
+                Log.LogException(exception);
+            }
+            finally
+            {
+                Log.Stop();
+            }
         }
     }
 }

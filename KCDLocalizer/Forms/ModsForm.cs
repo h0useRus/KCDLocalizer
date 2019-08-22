@@ -46,6 +46,7 @@ namespace NSW.KCDLocalizer.Forms
             {
                 ClearAll();
                 tbModFolder.Text = openModFolder.SelectedPath;
+                Log.LogInfo("Open Mod", $"Path: {tbModFolder.Text}");
                 _manifest = LoadModManifest(openModFolder.SelectedPath);
                 tbModInfoName.Text = _manifest.Info.Name;
                 tbModInfoDesc.Text = _manifest.Info.Description;
@@ -54,8 +55,11 @@ namespace NSW.KCDLocalizer.Forms
                 tbModInfoCreated.Text = _manifest.Info.CreatedOn ?? DateTime.Today.ToString("d");
                 lbModInfoDependencies.DataSource = _manifest.Info.Dependencies;
                 lbModInfoGameVersions.DataSource = _manifest.Supports;
+                Log.LogInfo("Open mod", $"Name: {_manifest.Info.Name}");
+                Log.LogInfo("Open mod", "Start loading structure");
                 LoadModStructure(openModFolder.SelectedPath, _dataNode, false);
                 LoadModStructure(openModFolder.SelectedPath, _localizationNode, true);
+                Log.LogInfo("Open mod", "Finished loading structure");
                 UpdateControls();
             }
         }
@@ -104,8 +108,9 @@ namespace NSW.KCDLocalizer.Forms
                 }
                 structureNode.Expand();
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 structureNode.Nodes.Clear();
                 MessageBox.Show(Resources.Unable_to_read_mod_packages, Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -350,8 +355,9 @@ namespace NSW.KCDLocalizer.Forms
 
                 return true;
             }
-            catch
+            catch(Exception exception)
             {
+                Log.LogException(exception);
                 pakFilePath = null;
                 return false;
             }

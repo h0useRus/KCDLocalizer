@@ -42,6 +42,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbAutoTranslate = new System.Windows.Forms.CheckBox();
             this.cbAddMissedKeys = new System.Windows.Forms.CheckBox();
+            this.btnDeleteKey = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gvMain)).BeginInit();
             this.SuspendLayout();
             // 
@@ -143,9 +144,9 @@
             // 
             // cbHideTranslated
             // 
-            this.cbHideTranslated.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbHideTranslated.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cbHideTranslated.AutoSize = true;
-            this.cbHideTranslated.Location = new System.Drawing.Point(15, 417);
+            this.cbHideTranslated.Location = new System.Drawing.Point(529, 417);
             this.cbHideTranslated.Name = "cbHideTranslated";
             this.cbHideTranslated.Size = new System.Drawing.Size(97, 17);
             this.cbHideTranslated.TabIndex = 11;
@@ -155,8 +156,8 @@
             // 
             // btnAddNew
             // 
-            this.btnAddNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddNew.Location = new System.Drawing.Point(546, 413);
+            this.btnAddNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnAddNew.Location = new System.Drawing.Point(15, 413);
             this.btnAddNew.Name = "btnAddNew";
             this.btnAddNew.Size = new System.Drawing.Size(80, 23);
             this.btnAddNew.TabIndex = 12;
@@ -177,7 +178,6 @@
             // 
             // cbAutoTranslate
             // 
-            this.cbAutoTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbAutoTranslate.AutoSize = true;
             this.cbAutoTranslate.Checked = true;
             this.cbAutoTranslate.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -190,7 +190,6 @@
             // 
             // cbAddMissedKeys
             // 
-            this.cbAddMissedKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbAddMissedKeys.AutoSize = true;
             this.cbAddMissedKeys.Checked = true;
             this.cbAddMissedKeys.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -201,12 +200,24 @@
             this.cbAddMissedKeys.Text = "Add missed keys";
             this.cbAddMissedKeys.UseVisualStyleBackColor = true;
             // 
+            // btnDeleteKey
+            // 
+            this.btnDeleteKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDeleteKey.Location = new System.Drawing.Point(101, 413);
+            this.btnDeleteKey.Name = "btnDeleteKey";
+            this.btnDeleteKey.Size = new System.Drawing.Size(80, 23);
+            this.btnDeleteKey.TabIndex = 16;
+            this.btnDeleteKey.Text = "Delete Key";
+            this.btnDeleteKey.UseVisualStyleBackColor = true;
+            this.btnDeleteKey.Click += new System.EventHandler(this.BtnDeleteKey_Click);
+            // 
             // LocalizationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(800, 448);
+            this.Controls.Add(this.btnDeleteKey);
             this.Controls.Add(this.cbAddMissedKeys);
             this.Controls.Add(this.cbAutoTranslate);
             this.Controls.Add(this.btnCancel);
@@ -244,5 +255,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colTransaltion;
         private System.Windows.Forms.CheckBox cbAutoTranslate;
         private System.Windows.Forms.CheckBox cbAddMissedKeys;
+        private System.Windows.Forms.Button btnDeleteKey;
     }
 }
