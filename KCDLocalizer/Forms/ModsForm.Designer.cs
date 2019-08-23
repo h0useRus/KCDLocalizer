@@ -59,6 +59,7 @@ namespace NSW.KCDLocalizer.Forms
             this.cmsLocalizationAddLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.cmsLanguageFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmsLanguageFileAddFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSaveManifest = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -124,6 +125,7 @@ namespace NSW.KCDLocalizer.Forms
             // 
             // gpModInfo
             // 
+            this.gpModInfo.Controls.Add(this.btnSaveManifest);
             this.gpModInfo.Controls.Add(this.lbModInfoGameVersions);
             this.gpModInfo.Controls.Add(this.label8);
             this.gpModInfo.Controls.Add(this.label7);
@@ -140,10 +142,10 @@ namespace NSW.KCDLocalizer.Forms
             this.gpModInfo.Controls.Add(this.label2);
             this.gpModInfo.Location = new System.Drawing.Point(6, 53);
             this.gpModInfo.Name = "gpModInfo";
-            this.gpModInfo.Size = new System.Drawing.Size(512, 260);
+            this.gpModInfo.Size = new System.Drawing.Size(512, 282);
             this.gpModInfo.TabIndex = 3;
             this.gpModInfo.TabStop = false;
-            this.gpModInfo.Text = " Info ";
+            this.gpModInfo.Text = " Manifest ";
             this.gpModInfo.Resize += new System.EventHandler(this.GpModInfo_Resize);
             // 
             // lbModInfoGameVersions
@@ -339,6 +341,16 @@ namespace NSW.KCDLocalizer.Forms
             this.cmsLanguageFileAddFile.Size = new System.Drawing.Size(92, 22);
             this.cmsLanguageFileAddFile.Text = "Add File";
             // 
+            // btnSaveManifest
+            // 
+            this.btnSaveManifest.Location = new System.Drawing.Point(431, 252);
+            this.btnSaveManifest.Name = "btnSaveManifest";
+            this.btnSaveManifest.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveManifest.TabIndex = 14;
+            this.btnSaveManifest.Text = "Save";
+            this.btnSaveManifest.UseVisualStyleBackColor = true;
+            this.btnSaveManifest.Click += new System.EventHandler(this.BtnSaveManifest_Click);
+            // 
             // ModsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -392,5 +404,6 @@ namespace NSW.KCDLocalizer.Forms
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ListBox lbModInfoDependencies;
+        private System.Windows.Forms.Button btnSaveManifest;
     }
 }

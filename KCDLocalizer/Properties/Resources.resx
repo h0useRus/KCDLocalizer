@@ -157,4 +157,13 @@
   <data name="Zero_resources_selected_" xml:space="preserve">
     <value>Zero resources selected!</value>
   </data>
+  <data name="Caption_Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Manifest_saved" xml:space="preserve">
+    <value>Manifest saved!</value>
+  </data>
+  <data name="Manifest_not_saved" xml:space="preserve">
+    <value>Manifest not saved!</value>
+  </data>
 </root>
