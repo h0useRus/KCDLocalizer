@@ -47,12 +47,12 @@ namespace NSW.KCDLocalizer.Forms
                 ClearAll();
                 tbModFolder.Text = openModFolder.SelectedPath;
                 Log.LogInfo("Open Mod", $"Path: {tbModFolder.Text}");
-                _manifest = LoadModManifest(openModFolder.SelectedPath);
+                _manifest = ModManifest.Load(tbModFolder.Text);
                 tbModInfoName.Text = _manifest.Info.Name;
                 tbModInfoDesc.Text = _manifest.Info.Description;
                 tbModInfoAuthor.Text = _manifest.Info.Author;
-                tbModInfoVersion.Text = _manifest.Info.Version ?? "1.0.0.0";
-                tbModInfoCreated.Text = _manifest.Info.CreatedOn ?? DateTime.Today.ToString("d");
+                tbModInfoVersion.Text = _manifest.Info.Version;
+                tbModInfoCreated.Text = _manifest.Info.CreatedOn;
                 lbModInfoDependencies.DataSource = _manifest.Info.Dependencies;
                 lbModInfoGameVersions.DataSource = _manifest.Supports;
                 Log.LogInfo("Open mod", $"Name: {_manifest.Info.Name}");
@@ -62,28 +62,6 @@ namespace NSW.KCDLocalizer.Forms
                 Log.LogInfo("Open mod", "Finished loading structure");
                 UpdateControls();
             }
-        }
-
-        private ModManifest LoadModManifest(string modRootPath)
-        {
-            ModManifest manifest = null;
-            var manifestFileName = Path.Combine(modRootPath, "mod.manifest");
-            if (File.Exists(manifestFileName))
-            {
-                using (var stream = File.OpenRead(manifestFileName))
-                {
-                    var serializer = new XmlSerializer(typeof(ModManifest));
-                    manifest = serializer.Deserialize(stream) as ModManifest;
-                }
-            }
-
-            if (manifest == null)
-            {
-                var pathParts = modRootPath.Split('\\');
-                manifest = new ModManifest { Info = new ModManifestInfo { Name = pathParts[pathParts.Length - 1] } };
-            }
-
-            return manifest;
         }
 
         private void LoadModStructure(string rootPath, TreeNode structureNode, bool addFileNode, bool checkConflicts = false)
@@ -360,6 +338,24 @@ namespace NSW.KCDLocalizer.Forms
                 Log.LogException(exception);
                 pakFilePath = null;
                 return false;
+            }
+        }
+
+        private void BtnSaveManifest_Click(object sender, EventArgs e)
+        {
+            _manifest.Info.Name = tbModInfoName.Text?.Trim();
+            _manifest.Info.Description = tbModInfoDesc.Text?.Trim();
+            _manifest.Info.Author = tbModInfoAuthor.Text?.Trim();
+            _manifest.Info.Version = tbModInfoVersion.Text?.Trim();
+            _manifest.Info.CreatedOn = tbModInfoCreated.Text?.Trim();
+
+            if (_manifest.Save(tbModFolder.Text))
+            {
+                MessageBox.Show(this, Resources.Manifest_saved, Resources.Caption_Success, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            else
+            {
+                MessageBox.Show(this, Resources.Manifest_not_saved, Resources.Caption_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

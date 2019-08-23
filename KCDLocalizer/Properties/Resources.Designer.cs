@@ -107,6 +107,15 @@ namespace NSW.KCDLocalizer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        internal static string Caption_Success {
+            get {
+                return ResourceManager.GetString("Caption_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error reading localization file {0}.
         /// </summary>
         internal static string Error_Error_reading_localization_file {
@@ -130,6 +139,24 @@ namespace NSW.KCDLocalizer.Properties {
         internal static string Error_The_localization_file_not_found {
             get {
                 return ResourceManager.GetString("Error_The_localization_file_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest not saved!.
+        /// </summary>
+        internal static string Manifest_not_saved {
+            get {
+                return ResourceManager.GetString("Manifest_not_saved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest saved!.
+        /// </summary>
+        internal static string Manifest_saved {
+            get {
+                return ResourceManager.GetString("Manifest_saved", resourceCulture);
             }
         }
         
